@@ -69,7 +69,10 @@ def check_vulnerabilities(report: dict[str, Any]) -> tuple[bool, list[str]]:
                 )
                 print(f"   Package: {package} ({affected_version})")
                 print(f"   CVE: {cve}")
-                print(f"   Policy: Production dependencies must have no CRITICAL/HIGH vulnerabilities")
+                print(
+                    "   Policy: Production dependencies must have no "
+                    "CRITICAL/HIGH vulnerabilities"
+                )
             else:
                 warnings.append(
                     f"⚠️  {severity} vulnerability in {package} ({affected_version}) - CVE: {cve}"
@@ -85,14 +88,16 @@ def check_vulnerabilities(report: dict[str, Any]) -> tuple[bool, list[str]]:
                 print(f"   Package: {package} ({affected_version})")
                 print(f"   CVE: {cve}")
                 print(
-                    f"   Policy: Even dev dependencies cannot have CRITICAL/HIGH vulnerabilities"
+                    "   Policy: Even dev dependencies cannot have CRITICAL/HIGH vulnerabilities"
                 )
             else:
                 warnings.append(
-                    f"⚠️  {severity} vulnerability in DEV dependency {package} ({affected_version}) - CVE: {cve}"
+                    f"⚠️  {severity} vulnerability in DEV dependency "
+                    f"{package} ({affected_version}) - CVE: {cve}"
                 )
                 warnings.append(
-                    f"   Policy: MEDIUM/LOW in dev dependencies can be addressed in follow-up"
+                    "   Policy: MEDIUM/LOW in dev dependencies can be "
+                    "addressed in follow-up"
                 )
 
     return should_block, warnings
