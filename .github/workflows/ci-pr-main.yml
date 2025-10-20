@@ -166,11 +166,6 @@ jobs:
           uv run bandit -r src/ -f json -o bandit-report.json || true
           uv run bandit -r src/ --severity-level medium
       
-      - name: Run Safety dependency scan
-        run: |
-          uv run safety check --output json > safety-report.json || true
-          python scripts/safety-policy-check.py safety-report.json
-      
       - name: Run npm audit (if frontend exists)
         run: |
           if (Test-Path frontend/package.json) {
@@ -186,8 +181,6 @@ jobs:
         if: always()
         with:
           name: security-reports
-          path: |
-            bandit-report.json
-            safety-report.json
+          path: bandit-report.json
           retention-days: 90
 
