@@ -27,16 +27,16 @@ This document defines the **week-by-week sprint plan** for the **Iris Phase 1 MV
 
 **Tasks:**
 
-* Initialize GitHub repo and create base folders (backend, frontend, docs, configs, tests).
-* Add `pyproject.toml`, `package.json`, and `justfile`.
-* Configure Docker Compose for FastAPI + Supabase.
-* Set up Supabase instance and test basic sync.
-* Implement basic SQLite schema and initial migration.
-* Validate `uv` and `Typer` CLI commands.
+- Initialize GitHub repo and create base folders (backend, frontend, docs, configs, tests).
+- Add `pyproject.toml`, `package.json`, and `justfile`.
+- Configure Docker Compose for FastAPI + Supabase.
+- Set up Supabase instance and test basic sync.
+- Implement basic SQLite schema and initial migration.
+- Validate `uv` and `Typer` CLI commands.
 
 **Deliverable:**
 
-* Running local stack: Tauri shell + FastAPI backend + Supabase sync verified.
+- Running local stack: Tauri shell + FastAPI backend + Supabase sync verified.
 
 ---
 
@@ -46,16 +46,16 @@ This document defines the **week-by-week sprint plan** for the **Iris Phase 1 MV
 
 **Tasks:**
 
-* Implement SQLModel schemas: `projects`, `tasks`, `ideas`, `reminders`, `notes`.
-* Build CRUD endpoints in FastAPI for each entity.
-* Add logging (Loguru) and error handling.
-* Integrate unit tests for API routes.
-* Add sync engine skeleton (SQLite ↔ Supabase).
+- Implement SQLModel schemas: `projects`, `tasks`, `ideas`, `reminders`, `notes`.
+- Build CRUD endpoints in FastAPI for each entity.
+- Add logging (Loguru) and error handling.
+- Integrate unit tests for API routes.
+- Add sync engine skeleton (SQLite ↔ Supabase).
 
 **Deliverable:**
 
-* Tested and documented API routes.
-* Local persistence confirmed.
+- Tested and documented API routes.
+- Local persistence confirmed.
 
 ---
 
@@ -65,15 +65,15 @@ This document defines the **week-by-week sprint plan** for the **Iris Phase 1 MV
 
 **Tasks:**
 
-* Initialize Tauri + React app with Tailwind, shadcn/ui, and Zustand.
-* Implement navigation tabs (Projects, Tasks, Ideas, Dashboard).
-* Connect to backend via FastAPI endpoints.
-* Test data flow using TanStack Query.
-* Implement dark mode and Iris brand theme.
+- Initialize Tauri + React app with Tailwind, shadcn/ui, and Zustand.
+- Implement navigation tabs (Projects, Tasks, Ideas, Dashboard).
+- Connect to backend via FastAPI endpoints.
+- Test data flow using TanStack Query.
+- Implement dark mode and Iris brand theme.
 
 **Deliverable:**
 
-* Functional Tauri shell with working UI skeleton.
+- Functional Tauri shell with working UI skeleton.
 
 ---
 
@@ -83,16 +83,16 @@ This document defines the **week-by-week sprint plan** for the **Iris Phase 1 MV
 
 **Tasks:**
 
-* Implement Project detail pages with linked Tasks.
-* Add new project and task creation forms.
-* Enable task completion, prioritization, and due dates.
-* Add filtering and sorting on Dashboard.
-* Test Supabase sync reliability.
+- Implement Project detail pages with linked Tasks.
+- Add new project and task creation forms.
+- Enable task completion, prioritization, and due dates.
+- Add filtering and sorting on Dashboard.
+- Test Supabase sync reliability.
 
 **Deliverable:**
 
-* Fully working project + task manager.
-* Data persistence verified offline and online.
+- Fully working project + task manager.
+- Data persistence verified offline and online.
 
 ---
 
@@ -102,16 +102,16 @@ This document defines the **week-by-week sprint plan** for the **Iris Phase 1 MV
 
 **Tasks:**
 
-* Implement Ideas inbox (quick add + promote to project).
-* Add project-level Notes section.
-* Implement daily briefing background job (FastAPI scheduler).
-* Integrate Tauri native notifications.
-* Add reminder management (add/edit/delete reminders).
+- Implement Ideas inbox (quick add + promote to project).
+- Add project-level Notes section.
+- Implement daily briefing background job (FastAPI scheduler).
+- Integrate Tauri native notifications.
+- Add reminder management (add/edit/delete reminders).
 
 **Deliverable:**
 
-* Daily briefing notifications active.
-* Idea-to-project promotion functional.
+- Daily briefing notifications active.
+- Idea-to-project promotion functional.
 
 ---
 
@@ -121,16 +121,16 @@ This document defines the **week-by-week sprint plan** for the **Iris Phase 1 MV
 
 **Tasks:**
 
-* UI/UX refinements: animations, icons, and shortcuts.
-* Write onboarding flow (intro page + example project).
-* Implement internal meta-project (Project: Iris) for self-management.
-* Full end-to-end tests.
-* Update PRD, Architecture, and Roadmap docs.
+- UI/UX refinements: animations, icons, and shortcuts.
+- Write onboarding flow (intro page + example project).
+- Implement internal meta-project (Project: Iris) for self-management.
+- Full end-to-end tests.
+- Update PRD, Architecture, and Roadmap docs.
 
 **Deliverable:**
 
-* Iris managing her own tasks and roadmap.
-* MVP ready for internal use and validation.
+- Iris managing her own tasks and roadmap.
+- MVP ready for internal use and validation.
 
 ---
 
@@ -149,28 +149,28 @@ This document defines the **week-by-week sprint plan** for the **Iris Phase 1 MV
 
 ## 5. Acceptance Criteria for Phase 1
 
-* All CRUD operations stable and persisted locally + via Supabase.
-* Offline-first mode verified.
-* Reminders and daily briefings operational.
-* UI meets brand standards (Iris theme, minimal aesthetic).
-* Iris’s own project managed within the app for ≥2 weeks.
+- All CRUD operations stable and persisted locally + via Supabase.
+- Offline-first mode verified.
+- Reminders and daily briefings operational.
+- UI meets brand standards (Iris theme, minimal aesthetic).
+- Iris’s own project managed within the app for ≥2 weeks.
 
 ---
 
 ## 6. Dependencies
 
-* Supabase and Docker Compose for cloud and local sync.
-* FastAPI + SQLModel for backend.
-* Tauri + React for frontend.
-* GitHub Actions for CI/CD.
+- Supabase and Docker Compose for cloud and local sync.
+- FastAPI + SQLModel for backend.
+- Tauri + React for frontend.
+- GitHub Actions for CI/CD.
 
 ---
 
 ## 7. Next Steps After Phase 1
 
-* Begin Phase 2 planning (Agent Integration).
-* Define new PRD sections for MCP tools and LangGraph supervisor.
-* Conduct usability testing and user feedback analysis.
+- Begin Phase 2 planning (Agent Integration).
+- Define new PRD sections for MCP tools and LangGraph supervisor.
+- Conduct usability testing and user feedback analysis.
 
 ---
 

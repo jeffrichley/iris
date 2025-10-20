@@ -9,24 +9,28 @@ This document establishes the foundational principles and standards for developi
 ## 🎯 Core Tenets
 
 ### 1. **Local-First Forever**
+
 - User data MUST reside locally first (SQLite)
 - Cloud sync is enhancement, not requirement
 - Offline functionality is non-negotiable
 - No feature should fail without internet connectivity
 
 ### 2. **Zero Data Loss**
+
 - All state changes MUST be durable
 - Crashes cannot lose unsaved work
 - Sync conflicts must be resolved transparently
 - User actions must be recoverable
 
 ### 3. **Privacy by Design**
+
 - User data stays local by default
 - Opt-in for cloud features
 - No telemetry without explicit consent
 - Sensitive logs excluded from error reporting
 
 ### 4. **Performance is Feature**
+
 - Responsiveness equals trust
 - Every millisecond counts
 - Measure first, optimize second
@@ -39,6 +43,7 @@ This document establishes the foundational principles and standards for developi
 ### Principle 1: Type Safety First
 
 **Rules:**
+
 - ✅ All Python code MUST use type hints (no `Any` allowed)
 - ✅ All TypeScript code MUST enable strict mode
 - ✅ Enums for static values; no magic strings
@@ -47,6 +52,7 @@ This document establishes the foundational principles and standards for developi
 - ❌ No `typing.Any` without documented justification
 
 **Example (Python):**
+
 ```python
 # ❌ BAD
 def process_task(data: dict) -> Any:
@@ -66,7 +72,7 @@ class TaskStatus(str, Enum):
 class Task(BaseModel):
     title: str
     status: TaskStatus
-    
+
 def process_task(task: Task) -> ProcessResult:
     status_handlers: dict[TaskStatus, Callable] = {
         TaskStatus.TODO: handle_todo,
@@ -79,12 +85,14 @@ def process_task(task: Task) -> ProcessResult:
 ### Principle 2: Explicit Over Implicit
 
 **Rules:**
+
 - Function signatures MUST document intent clearly
 - Side effects MUST be documented
 - Dependencies MUST be injected, not imported globally
 - Configuration MUST be centralized in dedicated packages
 
 **Example:**
+
 ```python
 # ❌ BAD
 def save_task():
@@ -94,7 +102,7 @@ def save_task():
 # ✅ GOOD
 def save_task(task: Task, db: Database) -> SaveResult:
     """Save task to database.
-    
+
     Side effects: Writes to database, triggers sync event
     """
     result = db.save(task)
@@ -105,12 +113,14 @@ def save_task(task: Task, db: Database) -> SaveResult:
 ### Principle 3: Modular Architecture
 
 **Rules:**
+
 - One responsibility per module
 - Clear boundaries between layers (UI / API / Data)
 - Dependency inversion for testability
 - No circular dependencies
 
 **Layer Structure:**
+
 ```
 Frontend (React/Tauri) → API Layer (FastAPI) → Business Logic → Data Layer (SQLite/Supabase)
 ```
@@ -118,12 +128,14 @@ Frontend (React/Tauri) → API Layer (FastAPI) → Business Logic → Data Layer
 ### Principle 4: Error Handling
 
 **Rules:**
+
 - MUST use rich library for colored logging
 - Errors MUST be specific, never generic
 - User-facing errors MUST be actionable
 - System errors MUST be logged with context
 
 **Example:**
+
 ```python
 from rich.console import Console
 from rich.panel import Panel
@@ -154,12 +166,14 @@ except ValidationError as e:
 ### Principle 5: Documentation Standards
 
 **Rules:**
+
 - Public APIs MUST have docstrings
 - Complex logic MUST have inline comments
 - Architecture decisions MUST be documented
 - Breaking changes MUST update CHANGELOG
 
 **Format:**
+
 ```python
 def sync_differential(
     local: SQLiteDB,
@@ -167,22 +181,22 @@ def sync_differential(
     strategy: SyncStrategy = SyncStrategy.TIMESTAMP
 ) -> SyncResult:
     """Perform differential sync between local and remote databases.
-    
+
     This function implements a timestamp-based differential sync algorithm
     that minimizes data transfer by only syncing changed records.
-    
+
     Args:
         local: Local SQLite database instance
         remote: Remote Supabase database instance
         strategy: Sync strategy (TIMESTAMP or HASH)
-        
+
     Returns:
         SyncResult containing counts of pushed, pulled, and conflicted records
-        
+
     Raises:
         SyncConflictError: When conflicts cannot be auto-resolved
         NetworkError: When remote is unreachable
-        
+
     Example:
         >>> result = sync_differential(local_db, supabase_db)
         >>> print(f"Synced {result.pushed} local → cloud")
@@ -197,12 +211,14 @@ def sync_differential(
 ### Principle 6: Test Pyramid
 
 **Rules:**
+
 - Unit tests: 70% (fast, isolated, no I/O)
 - Integration tests: 20% (API + DB)
 - E2E tests: 10% (full user workflows)
 - All tests MUST use `pytest.mark.unit` / `integration` / `e2e` decorators explicitly
 
 **Coverage Requirements:**
+
 - Core business logic: 90% minimum
 - API endpoints: 85% minimum
 - Utilities: 80% minimum
@@ -211,6 +227,7 @@ def sync_differential(
 ### Principle 7: Test Quality
 
 **Rules:**
+
 - ✅ Tests MUST be deterministic (no flaky tests)
 - ✅ Tests MUST be isolated (no shared state)
 - ✅ Tests MUST be fast (unit tests < 50ms each)
@@ -219,6 +236,7 @@ def sync_differential(
 - ❌ No test pollution in source code (use `tests/system/`)
 
 **Example:**
+
 ```python
 import pytest
 from iris.tasks import TaskService, Task, TaskStatus
@@ -229,10 +247,10 @@ def test_task_service_marks_task_as_complete():
     # Arrange
     service = TaskService(db=MockDatabase())
     task = Task(id="t1", title="Test", status=TaskStatus.DOING)
-    
+
     # Act
     result = service.complete(task)
-    
+
     # Assert
     assert result.status == TaskStatus.DONE
     assert result.completed_at is not None
@@ -244,10 +262,10 @@ def test_task_service_persists_completion_to_database(real_db):
     # Arrange
     service = TaskService(db=real_db)
     task = service.create(Task(title="Test Task"))
-    
+
     # Act
     service.complete(task)
-    
+
     # Assert
     persisted = real_db.get_task(task.id)
     assert persisted.status == TaskStatus.DONE
@@ -256,11 +274,13 @@ def test_task_service_persists_completion_to_database(real_db):
 ### Principle 8: Test Execution
 
 **Command:**
+
 ```bash
 just test  # Always use this; never invoke pytest directly
 ```
 
 **CI Requirements:**
+
 - All tests MUST pass before merge
 - Coverage reports MUST be generated
 - Performance benchmarks MUST be tracked
@@ -272,33 +292,37 @@ just test  # Always use this; never invoke pytest directly
 ### Principle 9: Design System
 
 **Rules:**
+
 - MUST use shadcn/ui components only
 - MUST follow Tailwind conventions
 - MUST maintain dark theme first (light optional)
 - MUST use Iris brand colors consistently
 
 **Brand Colors:**
+
 ```css
---iris-primary: #6C63FF;      /* Iris Blue */
---iris-bg-dark: #0F0F1A;      /* Background */
---iris-surface: #1A1A2E;      /* Cards/Panels */
---iris-success: #00D9A3;      /* Success states */
---iris-warning: #FFB547;      /* Warning states */
---iris-error: #FF6B6B;        /* Error states */
---iris-text: #E4E4E7;         /* Primary text */
---iris-text-muted: #A1A1AA;   /* Secondary text */
+--iris-primary: #6c63ff; /* Iris Blue */
+--iris-bg-dark: #0f0f1a; /* Background */
+--iris-surface: #1a1a2e; /* Cards/Panels */
+--iris-success: #00d9a3; /* Success states */
+--iris-warning: #ffb547; /* Warning states */
+--iris-error: #ff6b6b; /* Error states */
+--iris-text: #e4e4e7; /* Primary text */
+--iris-text-muted: #a1a1aa; /* Secondary text */
 ```
 
 **Typography:**
+
 ```css
---font-body: 'Inter', sans-serif;
---font-display: 'DM Sans', sans-serif;
---font-mono: 'Fira Code', monospace;
+--font-body: "Inter", sans-serif;
+--font-display: "DM Sans", sans-serif;
+--font-mono: "Fira Code", monospace;
 ```
 
 ### Principle 10: Interaction Patterns
 
 **Rules:**
+
 - Keyboard shortcuts for all primary actions
 - Loading states for operations > 100ms
 - Optimistic UI updates with rollback
@@ -306,6 +330,7 @@ just test  # Always use this; never invoke pytest directly
 - Toast notifications for async confirmations
 
 **Keyboard Shortcuts Standard:**
+
 ```typescript
 // Primary actions
 Ctrl+N / Cmd+N        → New Task
@@ -322,6 +347,7 @@ Ctrl+B / Cmd+B        → Toggle Sidebar
 ### Principle 11: Accessibility
 
 **Rules:**
+
 - WCAG 2.1 AA compliance minimum
 - Semantic HTML structure
 - ARIA labels on interactive elements
@@ -331,6 +357,7 @@ Ctrl+B / Cmd+B        → Toggle Sidebar
 ### Principle 12: Feedback & Status
 
 **Rules:**
+
 - User actions MUST provide immediate feedback
 - Loading states MUST be visible
 - Error messages MUST be actionable
@@ -338,6 +365,7 @@ Ctrl+B / Cmd+B        → Toggle Sidebar
 - Progress indicators for long operations
 
 **Feedback Patterns:**
+
 ```typescript
 // ❌ BAD
 async function saveTask(task: Task) {
@@ -349,7 +377,7 @@ async function saveTask(task: Task) {
   // Immediate optimistic update
   updateLocalState(task);
   toast.loading("Saving task...");
-  
+
   try {
     await api.save(task);
     toast.success("Task saved successfully");
@@ -357,7 +385,7 @@ async function saveTask(task: Task) {
     // Rollback optimistic update
     revertLocalState();
     toast.error("Failed to save task", {
-      action: { label: "Retry", onClick: () => saveTask(task) }
+      action: { label: "Retry", onClick: () => saveTask(task) },
     });
   }
 }
@@ -381,6 +409,7 @@ async function saveTask(task: Task) {
 | TTS generation | < 500ms | 1.5s | Text → audio playback |
 
 **Enforcement:**
+
 - Performance budgets tracked in CI
 - Regressions > 10% block deployment
 - Real-world metrics collected via telemetry (opt-in)
@@ -388,6 +417,7 @@ async function saveTask(task: Task) {
 ### Principle 14: Resource Management
 
 **Rules:**
+
 - Bundle size: Frontend < 500KB gzipped
 - Memory: Peak usage < 200MB for base app
 - Database queries: < 10ms for indexed lookups
@@ -395,6 +425,7 @@ async function saveTask(task: Task) {
 - WebSocket messages: < 1KB per message
 
 **Monitoring:**
+
 ```python
 from iris.telemetry import measure_performance
 
@@ -407,18 +438,20 @@ async def load_dashboard(user_id: str) -> Dashboard:
 ### Principle 15: Optimization Strategy
 
 **Priority Order:**
+
 1. **Correctness** — Never sacrifice data integrity
 2. **Perceived Performance** — Optimistic updates, loading states
 3. **Actual Performance** — Caching, indexing, lazy loading
 4. **Resource Efficiency** — Memory, CPU, battery optimization
 
 **Caching Strategy:**
+
 ```typescript
 // API responses cached with TTL
 const { data, isLoading } = useQuery({
-  queryKey: ['tasks', filters],
+  queryKey: ["tasks", filters],
   queryFn: fetchTasks,
-  staleTime: 30_000,  // 30s
+  staleTime: 30_000, // 30s
   cacheTime: 300_000, // 5m
 });
 ```
@@ -426,6 +459,7 @@ const { data, isLoading } = useQuery({
 ### Principle 16: Scalability Boundaries
 
 **System Limits:**
+
 - Projects: 1,000 per user
 - Tasks: 10,000 per project
 - Ideas: Unlimited (archived after 6 months inactive)
@@ -433,6 +467,7 @@ const { data, isLoading } = useQuery({
 - Reminders: 1,000 active per user
 
 **Graceful Degradation:**
+
 - Pagination for lists > 50 items
 - Virtual scrolling for lists > 100 items
 - Lazy loading for embedded content
@@ -445,6 +480,7 @@ const { data, isLoading } = useQuery({
 ### Principle 17: Version Control
 
 **Rules:**
+
 - Conventional commits required
 - Feature branches from `main`
 - PR required for all changes
@@ -452,6 +488,7 @@ const { data, isLoading } = useQuery({
 - Semantic versioning strictly enforced
 
 **Commit Format:**
+
 ```
 type(scope): description
 
@@ -465,6 +502,7 @@ type(scope): description
 ### Principle 18: Code Review
 
 **Requirements:**
+
 - All PRs require review
 - No self-merge allowed
 - CI must pass
@@ -472,6 +510,7 @@ type(scope): description
 - Changelog updated for user-facing changes
 
 **Review Checklist:**
+
 - [ ] Tests added/updated
 - [ ] Documentation updated
 - [ ] Performance impact assessed
@@ -481,6 +520,7 @@ type(scope): description
 ### Principle 19: Tooling Compliance
 
 **Commands (MUST use these):**
+
 ```bash
 just test          # Run tests (never pytest directly)
 just lint          # Run linting
@@ -490,6 +530,7 @@ uv sync            # Sync dependencies (never pip)
 ```
 
 **Never:**
+
 - Reference `.venv` directly
 - Use `pip` instead of `uv`
 - Disable pre-commit hooks
@@ -502,6 +543,7 @@ uv sync            # Sync dependencies (never pip)
 ### Principle 20: Deployment Safety
 
 **Pre-release Checklist:**
+
 - [ ] All tests passing
 - [ ] Performance benchmarks met
 - [ ] Security audit passed
@@ -510,6 +552,7 @@ uv sync            # Sync dependencies (never pip)
 - [ ] Rollback plan documented
 
 **Release Process:**
+
 1. Version bump (semantic versioning)
 2. Changelog generation
 3. Tag creation
@@ -524,6 +567,7 @@ uv sync            # Sync dependencies (never pip)
 ### Principle 21: Continuous Improvement
 
 **Rules:**
+
 - Retrospectives after each milestone
 - Performance metrics reviewed monthly
 - User feedback triaged weekly
@@ -532,6 +576,7 @@ uv sync            # Sync dependencies (never pip)
 ### Principle 22: Constitutional Amendments
 
 **Process:**
+
 - Proposals require documented rationale
 - Team discussion required
 - Approval by project owner
@@ -542,17 +587,20 @@ uv sync            # Sync dependencies (never pip)
 ## 📝 Governance
 
 ### Authority
+
 - **Project Owner:** Jeff Richley (final decision authority)
 - **AI Secretary:** Iris (proposes improvements, enforces standards)
 - **Contributors:** Must follow all principles
 
 ### Enforcement
+
 - Pre-commit hooks enforce formatting
 - CI enforces tests and coverage
 - Code review enforces architecture
 - Performance budgets enforced automatically
 
 ### Exceptions
+
 - Must be documented with rationale
 - Require explicit approval
 - Tracked in `EXCEPTIONS.md`
@@ -563,12 +611,14 @@ uv sync            # Sync dependencies (never pip)
 ## 📊 Metrics & Success
 
 ### Quality Metrics
+
 - Test coverage: ≥ 85%
 - Type coverage: 100%
 - Performance budget compliance: 100%
 - Zero critical security vulnerabilities
 
 ### User Experience Metrics
+
 - Dashboard load time: < 150ms (p95)
 - Crash rate: < 0.1%
 - Data loss incidents: 0
@@ -579,6 +629,7 @@ uv sync            # Sync dependencies (never pip)
 ## 🌟 Philosophy
 
 > "Iris is built on trust. Users trust us with their most important tasks and ideas. We honor that trust through:
+>
 > - Uncompromising quality
 > - Radical transparency
 > - Privacy by default
@@ -587,11 +638,10 @@ uv sync            # Sync dependencies (never pip)
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** October 20, 2025  
+**Version:** 1.0.0
+**Last Updated:** October 20, 2025
 **Next Review:** January 2026
 
 ---
 
-*This constitution is a living document. All suggestions for improvement are welcome through the standard PR process.*
-
+_This constitution is a living document. All suggestions for improvement are welcome through the standard PR process._

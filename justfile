@@ -130,4 +130,3 @@ coverage:
     uv run pytest --cov=src --cov-report=html
     @echo "Opening coverage report..."
     {{if os() == "windows" { "start htmlcov/index.html" } else if os() == "macos" { "open htmlcov/index.html" } else { "xdg-open htmlcov/index.html" } }}
-

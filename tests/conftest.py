@@ -7,4 +7,3 @@ import pytest
 def sample_fixture():
     """Sample fixture for testing."""
     return "test_data"
-

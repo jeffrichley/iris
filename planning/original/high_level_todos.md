@@ -32,10 +32,10 @@ Let’s reframe the scope around that reality.
 
 ### 🧱 Architecture Implications
 
-* **Frontend:** Dashboard-first UI (Tauri + Svelte/React).
-* **Backend:** Supabase for projects, tasks, ideas, and reminders.
-* **Logic Layer:** Minimal orchestration; no intent parsing yet.
-* **Agents:** Added next phase; they’ll operate *on this same data layer*.
+- **Frontend:** Dashboard-first UI (Tauri + Svelte/React).
+- **Backend:** Supabase for projects, tasks, ideas, and reminders.
+- **Logic Layer:** Minimal orchestration; no intent parsing yet.
+- **Agents:** Added next phase; they’ll operate _on this same data layer_.
 
 ---
 
@@ -59,4 +59,3 @@ Let’s reframe the scope around that reality.
 | **ARCHITECTURE.md** | Define data model, backend structure, UI components.      |
 | **ROADMAP.md**      | Cover Phases 0–2 (through agent integration).             |
 | **SPRINTS.md**      | Implementation breakdown for the structured interface.    |
-

@@ -19,10 +19,10 @@ You are juggling multiple simultaneous projects (research, PhD, robotics, AI fra
 
 Iris should solve:
 
-* Cognitive overload from remembering dozens of tasks and deadlines.
-* Lost or scattered ideas from spontaneous inspiration.
-* Difficulty balancing priorities and workload across projects.
-* Lack of an integrated system that both stores and synthesizes project data.
+- Cognitive overload from remembering dozens of tasks and deadlines.
+- Lost or scattered ideas from spontaneous inspiration.
+- Difficulty balancing priorities and workload across projects.
+- Lack of an integrated system that both stores and synthesizes project data.
 
 ---
 
@@ -30,11 +30,11 @@ Iris should solve:
 
 ### Goals
 
-* Provide a **single, intuitive interface** for managing all ongoing and future projects.
-* Enable structured **creation, tracking, and completion** of tasks.
-* Offer a **Good Idea Fairy inbox** for idea capture and conversion to projects.
-* Deliver **clear overviews** of progress, deadlines, and priorities.
-* Support **daily briefings and reminders** to keep the user on track.
+- Provide a **single, intuitive interface** for managing all ongoing and future projects.
+- Enable structured **creation, tracking, and completion** of tasks.
+- Offer a **Good Idea Fairy inbox** for idea capture and conversion to projects.
+- Deliver **clear overviews** of progress, deadlines, and priorities.
+- Support **daily briefings and reminders** to keep the user on track.
 
 ### Success Metrics
 
@@ -63,11 +63,11 @@ Iris should solve:
 
 ### Out of Scope (for Later Phases)
 
-* Conversational chat interface.
-* Agentic autonomy or task parsing.
-* Calendar and email integrations.
-* Analytics and time tracking.
-* Voice or multimodal input.
+- Conversational chat interface.
+- Agentic autonomy or task parsing.
+- Calendar and email integrations.
+- Analytics and time tracking.
+- Voice or multimodal input.
 
 ---
 
@@ -114,29 +114,29 @@ Iris should solve:
 
 ## 8. Acceptance Criteria
 
-* All MVP functionality implemented and accessible through the structured UI.
-* Projects, tasks, and ideas persist across sessions and sync with Supabase.
-* Daily briefing feature operational.
-* “Project: Iris” successfully managed through Iris interface.
-* All core workflows validated through internal usage.
+- All MVP functionality implemented and accessible through the structured UI.
+- Projects, tasks, and ideas persist across sessions and sync with Supabase.
+- Daily briefing feature operational.
+- “Project: Iris” successfully managed through Iris interface.
+- All core workflows validated through internal usage.
 
 ---
 
 ## 9. Dependencies
 
-* Tech Stack as defined in `iris_tech_stack_mcp.md`.
-* Supabase instance for sync and auth.
-* Tauri build environment.
-* FastAPI backend and SQLite schema alignment.
+- Tech Stack as defined in `iris_tech_stack_mcp.md`.
+- Supabase instance for sync and auth.
+- Tauri build environment.
+- FastAPI backend and SQLite schema alignment.
 
 ---
 
 ## 10. Deliverables
 
-* `ARCHITECTURE.md` — finalized after PRD approval.
-* `ROADMAP.md` — milestone plan for Phases 0–2.
-* MVP UI and backend implementation.
-* Internal validation by using Iris to manage her own development.
+- `ARCHITECTURE.md` — finalized after PRD approval.
+- `ROADMAP.md` — milestone plan for Phases 0–2.
+- MVP UI and backend implementation.
+- Internal validation by using Iris to manage her own development.
 
 ---
 

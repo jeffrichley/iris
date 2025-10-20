@@ -16,50 +16,50 @@ graph TD
     C --> E[Commit Successful]
     D --> F[Fix Types Manually]
     F --> B
-    
+
     E --> G{Push to Branch}
     G -->|Feature Branch| H[Workflow A: Fast Feedback]
     G -->|Main Branch| I[ERROR: Direct Push Blocked]
-    
+
     H --> J{Workflow A Result}
     J -->|Pass| K[Ready for PR]
     J -->|Fail| L[Fix Issues Locally]
     L --> G
-    
+
     K --> M[Create PR to Main]
     M --> N[Workflow B: Comprehensive Validation]
     N --> O[CodeQL Analysis]
-    
+
     N --> P{All 12 Matrix Jobs}
     P -->|Pass| Q[Coverage Check]
     P -->|Fail| R[Fix Platform Issue]
     R --> G
-    
+
     Q -->|>= 80%| S[Security Scan]
     Q -->|< 80%| T[Add Tests]
     T --> G
-    
+
     S --> U{Vulnerabilities?}
     U -->|HIGH/CRITICAL| V[Merge Blocked]
     U -->|MEDIUM/LOW or None| W[Security Pass]
     V --> X[Fix Vulnerabilities]
     X --> G
-    
+
     O --> Y{CodeQL Result}
     Y -->|Issues Found| Z[Review Security]
     Y -->|Clean| W
-    
+
     W --> AA{Code Review}
     AA -->|Approved + All Checks Pass| AB[Merge to Main]
     AA -->|Changes Requested| AC[Address Feedback]
     AC --> G
-    
+
     AB --> AD[Workflow C: Post-Merge]
     AD --> AE{Commit Type?}
     AE -->|feat| AF[MINOR Version Bump]
     AE -->|fix/perf| AG[PATCH Version Bump]
     AE -->|chore/docs| AH[No Bump]
-    
+
     AF --> AI[Create Git Tag]
     AG --> AI
     AI --> AJ[Push Tag]
@@ -95,8 +95,8 @@ graph TD
                   └─────────────┘
 ```
 
-**Jobs**: 3  
-**Time**: 3-5 minutes  
+**Jobs**: 3
+**Time**: 3-5 minutes
 **Purpose**: Quick validation
 
 ## Workflow B: PR to Main Comprehensive
@@ -135,8 +135,8 @@ graph TD
                   └─────────────┘
 ```
 
-**Jobs**: 13 (12 matrix + 1 security)  
-**Time**: 10-15 minutes  
+**Jobs**: 13 (12 matrix + 1 security)
+**Time**: 10-15 minutes
 **Purpose**: Production-ready validation
 
 ## Workflow C: Post-Merge
@@ -180,8 +180,8 @@ graph TD
                       [DONE]
 ```
 
-**Jobs**: 1  
-**Time**: 1-2 minutes  
+**Jobs**: 1
+**Time**: 1-2 minutes
 **Purpose**: Automated versioning
 
 ## Security Analysis Flow
@@ -278,6 +278,5 @@ Day 3: Merge
 
 ---
 
-**Last Updated**: October 20, 2025  
+**Last Updated**: October 20, 2025
 **Maintained By**: Iris Development Team
-
