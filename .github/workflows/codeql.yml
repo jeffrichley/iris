@@ -5,6 +5,9 @@ name: CodeQL Security Analysis
 # Languages: Python, TypeScript/JavaScript
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main

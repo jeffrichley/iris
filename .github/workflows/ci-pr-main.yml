@@ -168,7 +168,7 @@ jobs:
       
       - name: Run Safety dependency scan
         run: |
-          uv run safety check --json --output safety-report.json || true
+          uv run safety check --output json > safety-report.json || true
           python scripts/safety-policy-check.py safety-report.json
       
       - name: Run npm audit (if frontend exists)
