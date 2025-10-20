@@ -1,0 +1,112 @@
+name: CI - Feature Branch Fast Feedback
+
+# Workflow A: Fast feedback on feature branches
+# Runs on: Push to any branch except main
+# Purpose: Quick validation (lint + type-check + basic tests)
+# Expected time: 3-5 minutes with caching
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  fast-validation:
+    name: Fast Validation (${{ matrix.os }}, Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.12']
+        node-version: ['20.x']
+      fail-fast: false
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/uv
+            ~/.cache/pip
+            ~/AppData/Local/uv/cache
+            frontend/node_modules
+          key: ${{ runner.os }}-deps-py${{ matrix.python-version }}-node${{ matrix.node-version }}-${{ hashFiles('**/pyproject.toml', '**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-deps-py${{ matrix.python-version }}-node${{ matrix.node-version }}-
+            ${{ runner.os }}-deps-
+      
+      - name: Install uv
+        run: |
+          pip install uv
+      
+      - name: Install Python dependencies
+        run: |
+          uv sync --dev
+      
+      - name: Install frontend dependencies (if exists)
+        run: |
+          if (Test-Path frontend/package.json) {
+            cd frontend
+            npm install
+          } else {
+            Write-Host "Frontend not yet set up - skipping"
+          }
+        shell: pwsh
+      
+      - name: Run Python linting
+        run: |
+          uv run ruff check .
+      
+      - name: Run Python type checking
+        run: |
+          uv run mypy src/
+      
+      - name: Run frontend linting (if exists)
+        run: |
+          if (Test-Path frontend/package.json) {
+            cd frontend
+            npm run lint
+          } else {
+            Write-Host "Frontend not yet set up - skipping"
+          }
+        shell: pwsh
+      
+      - name: Run frontend type checking (if exists)
+        run: |
+          if (Test-Path frontend/tsconfig.json) {
+            cd frontend
+            npm run type-check
+          } else {
+            Write-Host "Frontend not yet set up - skipping"
+          }
+        shell: pwsh
+      
+      - name: Run tests
+        run: |
+          uv run pytest
+      
+      - name: Workflow summary
+        if: always()
+        run: |
+          Write-Host "========================================" -ForegroundColor Cyan
+          Write-Host "Fast Validation Complete!" -ForegroundColor Green
+          Write-Host "OS: ${{ matrix.os }}" -ForegroundColor Yellow
+          Write-Host "Python: ${{ matrix.python-version }}" -ForegroundColor Yellow
+          Write-Host "Node: ${{ matrix.node-version }}" -ForegroundColor Yellow
+          Write-Host "========================================" -ForegroundColor Cyan
+        shell: pwsh
+

@@ -1,7 +1,183 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "iris"
 version = "0.1.0"
-description = "Add your description here"
+description = "A personal project management assistant with local-first architecture"
 readme = "README.md"
 requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [
+    { name = "Jeff Richley", email = "jeffrichley@gmail.com" }
+]
+keywords = ["project-management", "productivity", "local-first", "ai-assistant"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
 dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.0",
+    "mypy>=1.8.0",
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "coverage>=7.3.0",
+    "bandit>=1.7.0",
+    "safety>=2.3.0",
+    "pre-commit>=3.5.0",
+    "commitizen>=3.13.0",
+    "detect-secrets>=1.4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/jeffrichley/iris"
+Repository = "https://github.com/jeffrichley/iris.git"
+Issues = "https://github.com/jeffrichley/iris/issues"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "A", "C4", "SIM"]
+ignore = []
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+check_untyped_defs = true
+
+# Allow tests to have untyped defs for cleaner test code
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+minversion = "7.4"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=src",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "e2e: End-to-end tests",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/ test_*.py",
+    "*/conftest.py",
+]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+precision = 2
+show_missing = true
+fail_under = 80
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+tag_format = "v$version"
+version_files = [
+    "pyproject.toml:version",
+]
+update_changelog_on_bump = true
+major_version_zero = true
+
+[tool.commitizen.customize]
+message_template = "{{change_type}}{{scope}}: {{subject}}"
+example = "feat(auth): add OAuth2 support"
+schema = "<type>(<scope>): <subject>"
+schema_pattern = "^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\\(\\w+\\))?:\\s.+"
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "change_type"
+message = "Select the type of change you are committing"
+choices = [
+    {value = "feat", name = "feat: A new feature"},
+    {value = "fix", name = "fix: A bug fix"},
+    {value = "docs", name = "docs: Documentation only changes"},
+    {value = "style", name = "style: Code style changes (formatting, semicolons, etc)"},
+    {value = "refactor", name = "refactor: Code change that neither fixes a bug nor adds a feature"},
+    {value = "perf", name = "perf: Performance improvement"},
+    {value = "test", name = "test: Adding or updating tests"},
+    {value = "chore", name = "chore: Changes to build process or auxiliary tools"},
+    {value = "ci", name = "ci: Changes to CI configuration files and scripts"},
+    {value = "build", name = "build: Changes that affect the build system or dependencies"},
+    {value = "revert", name = "revert: Reverts a previous commit"},
+]
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "scope"
+message = "What is the scope of this change? (press enter to skip)"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "subject"
+message = "Write a short, imperative description of the change"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "body"
+message = "Provide additional contextual information (press enter to skip)"
+
+[[tool.commitizen.customize.questions]]
+type = "confirm"
+name = "is_breaking_change"
+message = "Are there any breaking changes?"
+default = false
+
+[tool.commitizen.customize.bump_pattern]
+"^feat" = "MINOR"
+"^fix" = "PATCH"
+"^perf" = "PATCH"

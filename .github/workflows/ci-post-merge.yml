@@ -1,0 +1,85 @@
+name: CI - Post-Merge to Main
+
+# Workflow C: Post-merge automation (optional)
+# Runs on: Push to main (after PR merge)
+# Purpose: Version tagging and release automation
+# Expected time: 1-2 minutes
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    name: Release Automation
+    runs-on: ubuntu-latest
+    
+    # Skip for chore/docs commits
+    if: ${{ !contains(github.event.head_commit.message, 'chore:') && !contains(github.event.head_commit.message, 'docs:') }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for version bumping
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Install uv
+        run: |
+          pip install uv
+      
+      - name: Install dependencies
+        run: |
+          uv sync --dev
+      
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Bump version (if feat/fix/perf)
+        id: bump
+        run: |
+          # Commitizen bump version based on commit type
+          uv run cz bump --yes --check-consistency || echo "No version bump needed"
+          
+          # Output new version
+          NEW_VERSION=$(uv run cz version)
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Push version changes
+        if: steps.bump.outputs.version != ''
+        run: |
+          git push
+          git push --tags
+      
+      - name: Create GitHub Release
+        if: steps.bump.outputs.version != ''
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.bump.outputs.version }}
+          release_name: Release v${{ steps.bump.outputs.version }}
+          body: |
+            ## Changes
+            
+            See CHANGELOG.md for details.
+            
+            **Version**: ${{ steps.bump.outputs.version }}
+            **Commit**: ${{ github.sha }}
+          draft: false
+          prerelease: false
+      
+      - name: Workflow summary
+        run: |
+          echo "========================================" 
+          echo "Post-Merge Automation Complete!"
+          echo "Version: ${{ steps.bump.outputs.version || 'No bump' }}"
+          echo "========================================"
+
