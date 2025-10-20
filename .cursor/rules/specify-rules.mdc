@@ -1,0 +1,24 @@
+﻿# iris Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2025-10-20
+
+## Active Technologies
+- Python 3.12, 3.13 + TypeScript (strict mode) + Node.js 20.x LTS + GitHub Actions, ruff, mypy, bandit, safety, eslint, prettier, pre-commit framework, commitizen, just (task runner) (001-ci-precommit-setup)
+
+## Project Structure
+```
+src/
+tests/
+```
+
+## Commands
+cd src; pytest; ruff check .
+
+## Code Style
+Python 3.12, 3.13 + TypeScript (strict mode) + Node.js 20.x LTS: Follow standard conventions
+
+## Recent Changes
+- 001-ci-precommit-setup: Added Python 3.12, 3.13 + TypeScript (strict mode) + Node.js 20.x LTS + GitHub Actions, ruff, mypy, bandit, safety, eslint, prettier, pre-commit framework, commitizen, just (task runner)
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
