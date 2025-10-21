@@ -1,0 +1,920 @@
+openapi: 3.1.0
+
+info:
+  title: Iris API
+  version: 1.0.0
+  description: |
+    Cloud-first project management API with Google OAuth2 authentication via Supabase.
+    
+    All protected endpoints require JWT token obtained from Supabase Auth Google OAuth flow.
+    Row Level Security (RLS) automatically filters data by authenticated user_id.
+  contact:
+    name: Iris Development
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local development
+  - url: https://api.iris.example.com/api/v1
+    description: Production (future)
+
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Supabase-issued JWT token obtained via Google OAuth2 flow.
+        
+        Token contains: user_id (sub), email, provider ("google"), role, exp
+        
+        Example: Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+          description: Human-readable error message
+          example: "Invalid or expired token"
+
+    Project:
+      type: object
+      required:
+        - id
+        - user_id
+        - name
+        - status
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Project unique identifier
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        user_id:
+          type: string
+          format: uuid
+          description: Owner user ID (auto-set from JWT)
+          example: "660e8400-e29b-41d4-a716-446655440111"
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Project name
+          example: "Iris MVP Development"
+        description:
+          type: string
+          nullable: true
+          description: Optional project description
+          example: "Build cloud-first project manager"
+        status:
+          type: string
+          enum: [active, archived, completed]
+          description: Project status
+          example: "active"
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+          example: "2025-10-20T10:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2025-10-20T12:30:00Z"
+
+    ProjectCreate:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: "New Project"
+        description:
+          type: string
+          nullable: true
+          example: "Project description"
+        status:
+          type: string
+          enum: [active, archived, completed]
+          default: active
+
+    ProjectUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [active, archived, completed]
+
+    Task:
+      type: object
+      required:
+        - id
+        - user_id
+        - project_id
+        - title
+        - priority
+        - completed
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        project_id:
+          type: string
+          format: uuid
+          description: Parent project ID
+        title:
+          type: string
+          minLength: 1
+          maxLength: 500
+          example: "Implement JWT validation"
+        priority:
+          type: string
+          enum: [high, medium, low]
+          example: "high"
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2025-10-25T17:00:00Z"
+        completed:
+          type: boolean
+          example: false
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    TaskCreate:
+      type: object
+      required:
+        - project_id
+        - title
+      properties:
+        project_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          minLength: 1
+          maxLength: 500
+        priority:
+          type: string
+          enum: [high, medium, low]
+          default: medium
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    TaskUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 500
+        priority:
+          type: string
+          enum: [high, medium, low]
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+        completed:
+          type: boolean
+        notes:
+          type: string
+          nullable: true
+
+    Idea:
+      type: object
+      required:
+        - id
+        - user_id
+        - title
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: "Add voice interface"
+        description:
+          type: string
+          nullable: true
+          example: "Voice commands for task creation"
+        promoted_to_project_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: Project ID if idea was promoted
+        created_at:
+          type: string
+          format: date-time
+
+    IdeaCreate:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+
+    IdeaPromote:
+      type: object
+      required:
+        - project_name
+      properties:
+        project_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Name for the new project
+          example: "Voice Interface Project"
+
+    Reminder:
+      type: object
+      required:
+        - id
+        - user_id
+        - message
+        - due_time
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        task_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: Optional link to task
+        message:
+          type: string
+          minLength: 1
+          example: "Review sprint progress"
+        due_time:
+          type: string
+          format: date-time
+          example: "2025-10-21T09:00:00Z"
+        created_at:
+          type: string
+          format: date-time
+
+    ReminderCreate:
+      type: object
+      required:
+        - message
+        - due_time
+      properties:
+        task_id:
+          type: string
+          format: uuid
+          nullable: true
+        message:
+          type: string
+          minLength: 1
+        due_time:
+          type: string
+          format: date-time
+
+    Note:
+      type: object
+      required:
+        - id
+        - user_id
+        - project_id
+        - content
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        project_id:
+          type: string
+          format: uuid
+        content:
+          type: string
+          minLength: 1
+          example: "Meeting notes from standup"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    NoteCreate:
+      type: object
+      required:
+        - project_id
+        - content
+      properties:
+        project_id:
+          type: string
+          format: uuid
+        content:
+          type: string
+          minLength: 1
+
+    NoteUpdate:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          minLength: 1
+
+    HealthCheck:
+      type: object
+      required:
+        - status
+        - supabase_connected
+      properties:
+        status:
+          type: string
+          example: "healthy"
+        supabase_connected:
+          type: boolean
+          example: true
+        timestamp:
+          type: string
+          format: date-time
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      description: Public endpoint to verify API service health and Supabase connection
+      operationId: health_check
+      security: []  # No auth required
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+
+  /projects:
+    get:
+      summary: List user's projects
+      description: Get all projects for authenticated user (RLS filtered)
+      operationId: list_projects
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [active, archived, completed]
+          description: Filter by project status
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+        '401':
+          description: Unauthorized (invalid/missing JWT)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Create project
+      description: Create new project for authenticated user
+      operationId: create_project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreate'
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /projects/{project_id}:
+    get:
+      summary: Get project by ID
+      description: Get specific project (RLS enforces ownership)
+      operationId: get_project
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found or not owned by user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    patch:
+      summary: Update project
+      description: Update project fields (RLS enforces ownership)
+      operationId: update_project
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdate'
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete project
+      description: Delete project and cascade to tasks/notes (RLS enforces ownership)
+      operationId: delete_project
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Project deleted
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /tasks:
+    get:
+      summary: List user's tasks
+      description: Get all tasks for authenticated user (RLS filtered)
+      operationId: list_tasks
+      parameters:
+        - name: project_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Filter by project ID
+        - name: completed
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Filter by completion status
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Create task
+      description: Create new task linked to project
+      operationId: create_task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreate'
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Invalid request or project_id not owned by user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /tasks/{task_id}:
+    get:
+      summary: Get task by ID
+      operationId: get_task
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    patch:
+      summary: Update task
+      operationId: update_task
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+      responses:
+        '200':
+          description: Task updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete task
+      operationId: delete_task
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Task deleted
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ideas:
+    get:
+      summary: List user's ideas
+      operationId: list_ideas
+      responses:
+        '200':
+          description: List of ideas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Idea'
+
+    post:
+      summary: Create idea
+      operationId: create_idea
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdeaCreate'
+      responses:
+        '201':
+          description: Idea created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Idea'
+
+  /ideas/{idea_id}/promote:
+    post:
+      summary: Promote idea to project
+      description: Create project from idea and link them
+      operationId: promote_idea
+      parameters:
+        - name: idea_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdeaPromote'
+      responses:
+        '200':
+          description: Idea promoted, returns created project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idea:
+                    $ref: '#/components/schemas/Idea'
+                  project:
+                    $ref: '#/components/schemas/Project'
+        '404':
+          description: Idea not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /reminders:
+    get:
+      summary: List user's reminders
+      operationId: list_reminders
+      responses:
+        '200':
+          description: List of reminders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reminder'
+
+    post:
+      summary: Create reminder
+      operationId: create_reminder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReminderCreate'
+      responses:
+        '201':
+          description: Reminder created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+
+  /reminders/{reminder_id}:
+    delete:
+      summary: Delete reminder
+      operationId: delete_reminder
+      parameters:
+        - name: reminder_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Reminder deleted
+
+  /notes:
+    get:
+      summary: List user's notes
+      operationId: list_notes
+      parameters:
+        - name: project_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Filter by project ID
+      responses:
+        '200':
+          description: List of notes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Note'
+
+    post:
+      summary: Create note
+      operationId: create_note
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteCreate'
+      responses:
+        '201':
+          description: Note created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+
+  /notes/{note_id}:
+    get:
+      summary: Get note by ID
+      operationId: get_note
+      parameters:
+        - name: note_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Note details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+
+    patch:
+      summary: Update note
+      operationId: update_note
+      parameters:
+        - name: note_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteUpdate'
+      responses:
+        '200':
+          description: Note updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+
+    delete:
+      summary: Delete note
+      operationId: delete_note
+      parameters:
+        - name: note_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Note deleted
+

@@ -131,3 +131,29 @@ coverage:
     @echo "Opening coverage report..."
     {{if os() == "windows" { "start htmlcov/index.html" } else if os() == "macos" { "open htmlcov/index.html" } else { "xdg-open htmlcov/index.html" } }}
 
+# Database Commands (Sprint 0 - Cloud-First)
+
+# Initialize Supabase database schema (T034)
+db-init:
+    @echo "🌸 Initializing Supabase database schema..."
+    {{if os() == "windows" { "pwsh -ExecutionPolicy Bypass -File scripts/db-init.ps1" } else { "sh scripts/db-init.sh" } }}
+
+# Reset database (DEVELOPMENT ONLY - requires confirmation)
+db-reset:
+    @echo "⚠️  Database Reset (DEVELOPMENT ONLY)"
+    {{if os() == "windows" { "pwsh -ExecutionPolicy Bypass -File scripts/db-reset.ps1" } else { "sh scripts/db-reset.sh" } }}
+
+# Development Server Commands (Sprint 0)
+
+# Start FastAPI development server with hot-reload
+dev-server:
+    @echo "🌸 Starting Iris API server..."
+    @echo "📍 Server will be available at: http://localhost:8000"
+    @echo "📚 API docs at: http://localhost:8000/docs"
+    @echo ""
+    uv run uvicorn src.iris.api.main:app --host 0.0.0.0 --port 8000 --reload
+
+# Stop development server (Ctrl+C to stop for now)
+dev-stop:
+    @echo "Use Ctrl+C to stop the development server"
+
