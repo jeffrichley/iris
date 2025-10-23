@@ -177,9 +177,9 @@ tests/
 
 This structure is stable through the MVP and ready for:
 
-* Phase 2 agent integrations (LangGraph + MCP).
-* Phase 3 chat interface (WebSocket + MCP layer).
-* Phase 4+ external integrations and analytics.
+- Phase 2 agent integrations (LangGraph + MCP).
+- Phase 3 chat interface (WebSocket + MCP layer).
+- Phase 4+ external integrations and analytics.
 
 Future expansions (like plugins or voice subsystems) will live under `extensions/` or `voice/` directories.
 
@@ -189,9 +189,9 @@ Future expansions (like plugins or voice subsystems) will live under `extensions
 
 The Iris repository layout is intentionally **clean, modular, and scalable**. Each part serves a defined role:
 
-* **Backend** → Local-first logic and data.
-* **Frontend** → Tauri-based structured UI.
-* **Agents** → Reasoning and automation layer (future).
-* **Docs** → Living artifacts guiding every phase.
+- **Backend** → Local-first logic and data.
+- **Frontend** → Tauri-based structured UI.
+- **Agents** → Reasoning and automation layer (future).
+- **Docs** → Living artifacts guiding every phase.
 
 This layout ensures Iris can grow organically without sacrificing clarity or maintainability.

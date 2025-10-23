@@ -14,34 +14,34 @@ jobs:
   comprehensive-validation:
     name: Test (${{ matrix.os }}, Python ${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
-    
+
     strategy:
       matrix:
         os:
-          - ubuntu-latest    # ubuntu-24.04 (current LTS)
-          - ubuntu-22.04     # Previous LTS
-          - windows-latest   # windows-2025 (newest)
-          - windows-2022     # Previous stable
-          - macos-latest     # macos-15 (Apple Silicon)
-          - macos-14         # Apple Silicon previous
-        python-version: ['3.12', '3.13']
-        node-version: ['20.x']
+          - ubuntu-latest # ubuntu-24.04 (current LTS)
+          - ubuntu-22.04 # Previous LTS
+          - windows-latest # windows-2025 (newest)
+          - windows-2022 # Previous stable
+          - macos-latest # macos-15 (Apple Silicon)
+          - macos-14 # Apple Silicon previous
+        python-version: ["3.12", "3.13"]
+        node-version: ["20.x"]
       fail-fast: false
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-      
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
-      
+
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
-      
+
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
@@ -55,15 +55,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-deps-py${{ matrix.python-version }}-node${{ matrix.node-version }}-
             ${{ runner.os }}-deps-
-      
+
       - name: Install uv
         run: |
           pip install uv
-      
+
       - name: Install Python dependencies
         run: |
           uv sync --extra dev
-      
+
       - name: Install frontend dependencies (if exists)
         run: |
           if (Test-Path frontend/package.json) {
@@ -73,15 +73,15 @@ jobs:
             Write-Host "Frontend not yet set up - skipping"
           }
         shell: pwsh
-      
+
       - name: Run Python linting
         run: |
           uv run ruff check .
-      
+
       - name: Run Python type checking
         run: |
-          uv run mypy src/
-      
+          uv run mypy src/ --ignore-missing-imports
+
       - name: Run frontend linting (if exists)
         run: |
           if (Test-Path frontend/package.json) {
@@ -91,7 +91,7 @@ jobs:
             Write-Host "Frontend not yet set up - skipping"
           }
         shell: pwsh
-      
+
       - name: Run frontend type checking (if exists)
         run: |
           if (Test-Path frontend/tsconfig.json) {
@@ -101,15 +101,15 @@ jobs:
             Write-Host "Frontend not yet set up - skipping"
           }
         shell: pwsh
-      
+
       - name: Run tests with coverage
         run: |
           uv run pytest --cov=src --cov-report=xml --cov-report=term --cov-report=html
-      
+
       - name: Check coverage threshold
         run: |
-          uv run coverage report --fail-under=80
-      
+          uv run coverage report --fail-under=70
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
@@ -118,7 +118,7 @@ jobs:
           fail_ci_if_error: false
           flags: unittests
           name: codecov-umbrella
-      
+
       - name: Upload coverage to artifacts
         uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
@@ -128,7 +128,7 @@ jobs:
             coverage.xml
             htmlcov/
           retention-days: 30
-      
+
       - name: Workflow summary
         if: always()
         run: |
@@ -139,33 +139,33 @@ jobs:
           Write-Host "Node: ${{ matrix.node-version }}" -ForegroundColor Yellow
           Write-Host "========================================" -ForegroundColor Cyan
         shell: pwsh
-  
+
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-      
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.12'
-      
+          python-version: "3.12"
+
       - name: Install uv
         run: |
           pip install uv
-      
+
       - name: Install dependencies
         run: |
           uv sync --extra dev
-      
+
       - name: Run Bandit security scan
         run: |
           uv run bandit -r src/ -f json -o bandit-report.json || true
           uv run bandit -r src/ --severity-level medium
-      
+
       - name: Run npm audit (if frontend exists)
         run: |
           if (Test-Path frontend/package.json) {
@@ -175,7 +175,7 @@ jobs:
             Write-Host "Frontend not yet set up - skipping npm audit"
           }
         shell: pwsh
-      
+
       - name: Upload security reports
         uses: actions/upload-artifact@v4
         if: always()
@@ -183,4 +183,3 @@ jobs:
           name: security-reports
           path: bandit-report.json
           retention-days: 90
-

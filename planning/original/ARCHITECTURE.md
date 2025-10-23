@@ -12,8 +12,8 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 
 ```
 +-------------------------------------------------------------+
-|                      Iris (Tauri App)                      |
-|  React + TypeScript + Tailwind + Zustand + TanStack Query  |
+|                    Iris TUI (Terminal App)                 |
+|  Rich + Textual + Typer CLI + SQLModel + Local SQLite      |
 |-------------------------------------------------------------|
 |           FastAPI Backend  (REST + WebSocket API)          |
 |    - CRUD for projects, tasks, ideas, notes, reminders     |
@@ -34,7 +34,7 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 | ----------------------- | --------------------------------------------------------------------------------------------------------- |
 | **Local-first**         | All data lives locally first (SQLite). Cloud sync enhances reliability but is not required for daily use. |
 | **Offline resilience**  | The system operates without internet; sync occurs when reconnected.                                       |
-| **Cross-platform**      | Built with Tauri for macOS, Windows, and Linux.                                                           |
+| **Cross-platform**      | Built with Python for macOS, Windows, and Linux.                                                          |
 | **Scalable foundation** | Designed for easy introduction of agents, chat, and automation in later phases.                           |
 | **Transparency**        | Iris stores data in user-accessible SQLite and Supabase instances.                                        |
 
@@ -42,17 +42,17 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 
 ## 4. Component Breakdown
 
-### 4.1 Frontend (Tauri + React)
+### 4.1 Frontend (TUI - Terminal User Interface)
 
-| Component                | Description                                                                   |
-| ------------------------ | ----------------------------------------------------------------------------- |
-| **Tauri Shell**          | Provides desktop wrapper, file access, notifications, and auto-update system. |
-| **React UI**             | Main interface with modular tabs: Projects, Tasks, Ideas, Reminders, Notes.   |
-| **Zustand Store**        | Manages global application state (active project, filters, view modes).       |
-| **TanStack Query**       | Handles async data fetching, mutation, and sync with FastAPI.                 |
-| **Tailwind + shadcn/ui** | Provides modern responsive design and polished component library.             |
-| **Framer Motion**        | Animations for dashboard transitions and modal pop-ups.                       |
-| **Tauri Notifications**  | Native OS notifications for reminders and daily briefings.                    |
+| Component                  | Description                                                                  |
+| -------------------------- | ---------------------------------------------------------------------------- |
+| **Rich Console**           | Provides colored output, progress bars, and formatted text display.          |
+| **Textual TUI**            | Interactive terminal interface with tabs: Projects, Tasks, Ideas, Dashboard. |
+| **Typer CLI**              | Command-line interface for quick operations and batch processing.            |
+| **SQLModel Integration**   | Direct database access for fast local operations.                            |
+| **Rich Tables**            | Formatted data display for projects, tasks, and ideas.                       |
+| **Rich Panels**            | Status displays, notifications, and daily briefings.                         |
+| **Terminal Notifications** | Console-based alerts and reminders.                                          |
 
 ### 4.2 Backend (FastAPI)
 
@@ -62,7 +62,7 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 | **Sync Engine**          | Handles differential sync between SQLite and Supabase.                          |
 | **Scheduler**            | Triggers background tasks for reminders and daily summaries.                    |
 | **ORM Layer (SQLModel)** | Provides a typed schema for SQLite and Supabase compatibility.                  |
-| **Realtime Channel**     | Optional WebSocket feed for live updates between UI and backend.                |
+| **Realtime Channel**     | Optional WebSocket feed for live updates between TUI and backend.               |
 | **Logging**              | Loguru for structured logging and debugging.                                    |
 
 ### 4.3 Database Layer
@@ -89,9 +89,9 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 
 ### Relationships
 
-* One project → many tasks, notes, and reminders.
-* Ideas may be converted to projects.
-* Tasks optionally link to reminders.
+- One project → many tasks, notes, and reminders.
+- Ideas may be converted to projects.
+- Tasks optionally link to reminders.
 
 ---
 
@@ -107,16 +107,16 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 2. FastAPI logs timestamp + hash.
 3. Sync module detects new/changed entries.
 4. Pushes to Supabase if newer; pulls updates if local copy outdated.
-5. Supabase emits realtime event → frontend updates via TanStack Query.
+5. Supabase emits realtime event → TUI updates via direct database polling or WebSocket.
 
 ---
 
 ## 7. Reminders & Daily Briefing Engine
 
-* Runs as a background task in FastAPI.
-* Scans tasks/reminders due in next 24 hours.
-* Sends desktop notifications and/or generates a summary view.
-* Future phases may connect this to voice or email output.
+- Runs as a background task in FastAPI.
+- Scans tasks/reminders due in next 24 hours.
+- Sends terminal notifications and/or generates a summary view.
+- Future phases may connect this to voice or email output.
 
 ---
 
@@ -128,7 +128,7 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 | **just**               | Task runner (builds, sync, test commands).                 |
 | **Typer CLI (`iris`)** | Development CLI for managing builds, DB sync, and testing. |
 | **Docker Compose**     | For running FastAPI + Supabase locally.                    |
-| **Pytest / Vitest**    | Testing for backend and frontend respectively.             |
+| **Pytest**             | Testing for backend and TUI components.                    |
 | **GitHub Actions**     | CI/CD pipeline for builds and tests.                       |
 | **Pre-commit Hooks**   | Enforce code quality with Ruff + Black.                    |
 
@@ -140,17 +140,17 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 | ---------------------------- | ------------------------------------------------------------------------ |
 | **Agents (Phase 2)**         | FastAPI exposes internal API hooks compatible with LangGraph supervisor. |
 | **Chat Interface (Phase 3)** | WebSocket + MCP interface already stubbed in backend.                    |
-| **Voice I/O (Phase 4)**      | Tauri shell prepared for microphone and audio output permissions.        |
+| **Voice I/O (Phase 4)**      | Terminal prepared for microphone and audio output integration.           |
 | **Integrations (Phase 5)**   | Supabase tables and FastAPI routes modularized for extension.            |
 
 ---
 
 ## 10. Security & Privacy
 
-* Local data stored in SQLite within user profile directory.
-* Supabase communication secured with SSL.
-* Authentication optional for personal use; OAuth planned for public releases.
-* Sensitive logs excluded from Sentry reporting.
+- Local data stored in SQLite within user profile directory.
+- Supabase communication secured with SSL.
+- Authentication optional for personal use; OAuth planned for public releases.
+- Sensitive logs excluded from Sentry reporting.
 
 ---
 
@@ -158,15 +158,14 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 
 | Environment     | Method                                                           |
 | --------------- | ---------------------------------------------------------------- |
-| **Development** | `just dev` launches Tauri + FastAPI + Supabase local stack.      |
+| **Development** | `just dev` launches TUI + FastAPI + Supabase local stack.        |
 | **Testing**     | GitHub Actions workflow triggers CI builds and coverage reports. |
-| **Production**  | Tauri build → GitHub Releases with auto-update enabled.          |
+| **Production**  | Python package → GitHub Releases with pip/uv installation.       |
 
 ---
 
 ## 12. Summary
 
 The Phase 1 architecture delivers a solid foundation for structured project management while remaining flexible for future intelligent features. It prioritizes **data reliability**, **offline usability**, and **developer efficiency**, ensuring Iris can evolve into a fully autonomous personal assistant in later phases.
-
 
 Project Layout

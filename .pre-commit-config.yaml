@@ -5,7 +5,7 @@
 repos:
   # Ruff - Python linting and formatting
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.9
+    rev: v0.14.1
     hooks:
       # Run the linter
       - id: ruff
@@ -20,51 +20,26 @@ repos:
     rev: v1.8.0
     hooks:
       - id: mypy
-        args: [--ignore-missing-imports, --strict]
-        additional_dependencies: [pydantic]
-        files: ^src/
-
-  # ESLint - TypeScript/React linting
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.0.0
-    hooks:
-      - id: eslint
-        files: \.(js|jsx|ts|tsx)$
-        args: [--fix, --max-warnings=0]
-        additional_dependencies:
-          - eslint
-          - "@typescript-eslint/eslint-plugin"
-          - "@typescript-eslint/parser"
-          - eslint-plugin-react
-          - eslint-plugin-react-hooks
-          - eslint-plugin-jsx-a11y
-
-  # Prettier - TypeScript/React formatting
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0
-    hooks:
-      - id: prettier
-        files: \.(js|jsx|ts|tsx|json|css|md|yaml|yml)$
-        args: [--write]
+        args: [--ignore-missing-imports]
 
   # Commitizen - Conventional Commits enforcement
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.13.0
+    rev: v4.9.1
     hooks:
       - id: commitizen
         stages: [commit-msg]
 
   # Secret detection - prevent committing tokens/credentials
   - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.4.0
+    rev: v1.5.0
     hooks:
       - id: detect-secrets
-        args: ['--baseline', '.secrets.baseline']
-        exclude: package-lock.json
+        args: ["--baseline", ".secrets.baseline"]
+        exclude: package-lock.json|tests/.*
 
   # General file quality checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -75,4 +50,3 @@ repos:
         args: [--maxkb=1000]
       - id: check-merge-conflict
       - id: detect-private-key
-

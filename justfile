@@ -41,22 +41,16 @@ dev:
 lint:
     @echo "Running Python linting..."
     uv run ruff check .
-    @echo "Running TypeScript linting..."
-    -cd frontend 2>nul && npm run lint || echo "Frontend not yet set up"
 
 # Format code
 format:
     @echo "Formatting Python code..."
     uv run ruff format .
-    @echo "Formatting TypeScript code..."
-    -cd frontend 2>nul && npm run format || echo "Frontend not yet set up"
 
 # Run type checking
 type-check:
     @echo "Running Python type checking..."
-    uv run mypy src/
-    @echo "Running TypeScript type checking..."
-    -cd frontend 2>nul && npm run type-check || echo "Frontend not yet set up"
+    uv run mypy src/ --ignore-missing-imports
 
 # Run tests
 test:
@@ -90,7 +84,6 @@ clean:
     -rm -rf build dist *.egg-info
     -rm -rf .pytest_cache .mypy_cache .ruff_cache htmlcov .coverage coverage.xml
     -rm -rf src/**/__pycache__ tests/**/__pycache__
-    -rm -rf frontend/node_modules frontend/dist frontend/.next
     @echo "✓ Clean complete!"
 
 # Full clean including virtual environment
@@ -130,4 +123,3 @@ coverage:
     uv run pytest --cov=src --cov-report=html
     @echo "Opening coverage report..."
     {{if os() == "windows" { "start htmlcov/index.html" } else if os() == "macos" { "open htmlcov/index.html" } else { "xdg-open htmlcov/index.html" } }}
-

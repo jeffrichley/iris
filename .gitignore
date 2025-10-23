@@ -70,6 +70,11 @@ dmypy.json
 
 # Logs
 *.log
+logs/
+
+# Database files
+*.db
+.iris/
 
 # Node.js / Frontend
 node_modules/
@@ -86,4 +91,3 @@ build/
 # OS
 .DS_Store
 Thumbs.db
-

@@ -1,7 +1,7 @@
 # CI & Pre-commit Quickstart Guide
 
-**Feature**: 001-ci-precommit-setup  
-**Last Updated**: October 20, 2025  
+**Feature**: 001-ci-precommit-setup
+**Last Updated**: October 20, 2025
 **Audience**: Iris developers
 
 ## Overview
@@ -127,6 +127,7 @@ git push -u origin feature/my-awesome-feature
 **Trigger**: Push to any branch except `main`
 
 **What runs**:
+
 - ✅ Ruff linting (Python)
 - ✅ mypy type checking (Python)
 - ✅ ESLint (TypeScript/React)
@@ -144,6 +145,7 @@ git push -u origin feature/my-awesome-feature
 **Trigger**: Pull request targeting `main` branch
 
 **What runs**:
+
 - ✅ Full matrix builds (3 OS × 2 Python versions)
 - ✅ Complete test suite on all platforms
 - ✅ Security scans (Bandit, Safety, CodeQL)
@@ -154,7 +156,8 @@ git push -u origin feature/my-awesome-feature
 
 **Purpose**: Ensure code is production-ready before merge
 
-**Merge blocked if**: 
+**Merge blocked if**:
+
 - Any test fails on any platform
 - Coverage drops below 80%
 - Critical/High security vulnerabilities found
@@ -166,6 +169,7 @@ git push -u origin feature/my-awesome-feature
 **Trigger**: Push to `main` (after PR merge)
 
 **What runs**:
+
 - 📦 Optional: Version tagging
 - 📦 Optional: Release creation
 - 📦 Optional: Deployment triggers
@@ -263,12 +267,14 @@ git commit
 **Problem**: Tests pass locally but fail in CI
 
 **Common causes**:
+
 1. Platform-specific issue (Windows vs Linux vs macOS)
 2. Missing dependency in `pyproject.toml`
 3. Hard-coded paths that differ across OS
 4. Timezone or locale differences
 
 **Solution**:
+
 ```bash
 # Run tests in CI-like environment locally
 docker run -v $(pwd):/app -w /app python:3.12 just test
@@ -328,6 +334,7 @@ git push -u origin feature/my-fix
 **Problem**: PR blocked by failing status checks
 
 **Solution**:
+
 1. Check which CI job failed in GitHub PR UI
 2. Read error logs
 3. Fix issue locally
@@ -342,25 +349,27 @@ git push -u origin feature/my-fix
 
 ### Types
 
-| Type | When to Use | Example |
-|------|-------------|---------|
-| `feat` | New feature | `feat(tasks): add task priority levels` |
-| `fix` | Bug fix | `fix(sync): resolve conflict resolution edge case` |
-| `docs` | Documentation only | `docs(api): update authentication guide` |
-| `style` | Code style (formatting, no logic change) | `style(ui): adjust button spacing` |
-| `refactor` | Code restructuring (no behavior change) | `refactor(db): simplify query builder` |
-| `perf` | Performance improvement | `perf(search): add index on task title` |
-| `test` | Adding or updating tests | `test(tasks): add edge case coverage` |
-| `chore` | Build, tooling, dependencies | `chore(deps): update ruff to 0.2.0` |
+| Type       | When to Use                              | Example                                            |
+| ---------- | ---------------------------------------- | -------------------------------------------------- |
+| `feat`     | New feature                              | `feat(tasks): add task priority levels`            |
+| `fix`      | Bug fix                                  | `fix(sync): resolve conflict resolution edge case` |
+| `docs`     | Documentation only                       | `docs(api): update authentication guide`           |
+| `style`    | Code style (formatting, no logic change) | `style(ui): adjust button spacing`                 |
+| `refactor` | Code restructuring (no behavior change)  | `refactor(db): simplify query builder`             |
+| `perf`     | Performance improvement                  | `perf(search): add index on task title`            |
+| `test`     | Adding or updating tests                 | `test(tasks): add edge case coverage`              |
+| `chore`    | Build, tooling, dependencies             | `chore(deps): update ruff to 0.2.0`                |
 
 ### Scope (Optional but Recommended)
 
 Common scopes for Iris:
+
 - `auth`, `tasks`, `projects`, `sync`, `ui`, `api`, `db`, `cli`, `docs`, `ci`, `deps`
 
 ### Examples
 
 ✅ **Good**:
+
 ```
 feat(auth): add OAuth2 integration
 fix(sync): prevent data loss during conflict
@@ -370,6 +379,7 @@ chore(ci): optimize cache strategy
 ```
 
 ❌ **Bad**:
+
 ```
 Added stuff
 Fixed bug
@@ -385,7 +395,7 @@ $ cz commit
 ? Select the type of change you are committing: feat
 ? What is the scope of this change? (press enter to skip): tasks
 ? Write a short description: add task priority levels
-? Provide a longer description (press enter to skip): 
+? Provide a longer description (press enter to skip):
 ? Are there any breaking changes? (y/N): N
 ? Does this change affect any open issues? (y/N): N
 
@@ -399,6 +409,7 @@ $ cz commit
 ### 1. Commit Early, Commit Often
 
 Small, focused commits are easier to:
+
 - Review
 - Test
 - Revert if needed
@@ -434,6 +445,7 @@ just test
 ### 4. Use Pre-commit Hooks
 
 Let hooks auto-fix formatting:
+
 - Don't manually format with ruff/prettier
 - Commit normally, hooks handle it
 - Saves time and ensures consistency
@@ -506,4 +518,3 @@ Before your first PR:
 **Questions?** Open an issue or check the [research document](./research.md) for technical details.
 
 **Found a bug in CI?** PRs welcome! This system is designed to evolve with the project.
-
