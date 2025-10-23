@@ -299,10 +299,8 @@ class TestCLIEnvironmentIntegration:
             os.environ,
             {
                 "ENVIRONMENT": "production",
-                "DATABASE_URL": (
-                    "postgresql://user:pass@localhost:5432/iris_prod"  # pragma: allowlist secret
-                ),
-                "DB_PASSWORD": "secure_password",  # pragma: allowlist secret
+                "DATABASE_URL": "postgresql://user:pass@localhost:5432/iris_prod",
+                "DB_PASSWORD": "secure_password",
                 "LOG_LEVEL": "WARNING",
                 "DEBUG": "false",
             },

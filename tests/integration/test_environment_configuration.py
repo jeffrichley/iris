@@ -44,10 +44,8 @@ class TestEnvironmentConfiguration:
             os.environ,
             {
                 "ENVIRONMENT": "production",
-                "DATABASE_URL": (  # pragma: allowlist secret
-                    "postgresql://user:pass@localhost:5432/iris_prod"
-                ),
-                "DB_PASSWORD": "secure_password",  # pragma: allowlist secret
+                "DATABASE_URL": "postgresql://user:pass@localhost:5432/iris_prod",
+                "DB_PASSWORD": "secure_password",
                 "LOG_LEVEL": "WARNING",
                 "DEBUG": "false",
             },
@@ -265,7 +263,7 @@ ENVIRONMENT=development
                 "DB_PORT": "5432",
                 "DB_NAME": "iris",  # Use 'iris' to trigger SQLite logic
                 "DB_USER": "dev_user",
-                "DB_PASSWORD": "dev_pass",  # pragma: allowlist secret
+                "DB_PASSWORD": "dev_pass",
             },
         ):
             settings = Settings()
@@ -281,12 +279,12 @@ ENVIRONMENT=development
                 "DB_PORT": "5432",
                 "DB_NAME": "iris_prod",
                 "DB_USER": "prod_user",
-                "DB_PASSWORD": "prod_pass",  # pragma: allowlist secret
+                "DB_PASSWORD": "prod_pass",
             },
         ):
             settings = Settings()
             # Should use PostgreSQL for production
-            expected_url = "postgresql://prod_user:prod_pass@prod-db.example.com:5432/iris_prod"  # pragma: allowlist secret  # noqa: E501
+            expected_url = "postgresql://prod_user:prod_pass@prod-db.example.com:5432/iris_prod"
             assert settings.database.database_url == expected_url
 
     def test_connection_pool_environment_configuration(self):

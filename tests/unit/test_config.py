@@ -44,9 +44,7 @@ class TestDatabaseSettings:
         assert settings.database_url == "sqlite:///test.db"
 
         # Test PostgreSQL URL
-        settings = DatabaseSettings(
-            database_url="postgresql://user:pass@localhost:5432/db"  # pragma: allowlist secret
-        )
+        settings = DatabaseSettings(database_url="postgresql://user:pass@localhost:5432/db")
         assert settings.database_url == "postgresql://user:pass@localhost:5432/db"
 
         # Test URL building from components
@@ -55,7 +53,7 @@ class TestDatabaseSettings:
             db_port=3306,
             db_name="testdb",
             db_user="testuser",
-            db_password="testpass",  # pragma: allowlist secret
+            db_password="testpass",
         )
         assert settings.database_url == "postgresql://testuser:testpass@example.com:3306/testdb"
 
@@ -272,7 +270,7 @@ ENVIRONMENT=development
         # Test production configuration validation
         settings.application.environment = "production"
         settings.database.database_url = "postgresql://user:pass@localhost:5432/db"
-        settings.database.db_password = "secure_password"  # pragma: allowlist secret
+        settings.database.db_password = "secure_password"
         settings._validate_configuration()  # Should not raise
 
         # Test invalid production configuration
