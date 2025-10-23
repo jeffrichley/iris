@@ -43,6 +43,7 @@ The Iris project uses a three-tiered GitHub Actions CI/CD pipeline that provides
 **File**: `.github/workflows/ci-feature-branch.yml`
 
 **Trigger**:
+
 ```yaml
 on:
   push:
@@ -51,18 +52,20 @@ on:
 ```
 
 **Matrix Configuration**:
+
 ```yaml
 strategy:
   matrix:
     os: [ubuntu-latest, windows-latest, macos-latest]
-    python-version: ['3.12']
-    node-version: ['20.x']
+    python-version: ["3.12"]
+    node-version: ["20.x"]
   fail-fast: false
 ```
 
 **Jobs**: 3 (one per OS family)
 
 **Steps**:
+
 1. Checkout code
 2. Setup Python 3.12 + Node.js 20.x
 3. Cache dependencies (uv, pip, npm)
@@ -82,6 +85,7 @@ strategy:
 **File**: `.github/workflows/ci-pr-main.yml`
 
 **Trigger**:
+
 ```yaml
 on:
   pull_request:
@@ -90,24 +94,26 @@ on:
 ```
 
 **Matrix Configuration**:
+
 ```yaml
 strategy:
   matrix:
-    os: 
-      - ubuntu-latest    # ubuntu-24.04
+    os:
+      - ubuntu-latest # ubuntu-24.04
       - ubuntu-22.04
-      - windows-latest   # windows-2025
+      - windows-latest # windows-2025
       - windows-2022
-      - macos-latest     # macos-15 (Apple Silicon)
-      - macos-14         # Apple Silicon
-    python-version: ['3.12', '3.13']
-    node-version: ['20.x']
+      - macos-latest # macos-15 (Apple Silicon)
+      - macos-14 # Apple Silicon
+    python-version: ["3.12", "3.13"]
+    node-version: ["20.x"]
   fail-fast: false
 ```
 
 **Jobs**: 12 matrix test jobs + 1 security scan job = 13 jobs total
 
 **Matrix Test Job Steps**:
+
 1. Checkout code
 2. Setup Python (3.12 or 3.13) + Node.js 20.x
 3. Cache dependencies
@@ -119,6 +125,7 @@ strategy:
 9. Upload coverage to Codecov (ubuntu-latest + Python 3.12 only)
 
 **Security Scan Job Steps**:
+
 1. Bandit security scan (Python code)
 2. Safety dependency scan (Python packages)
 3. Risk-based policy enforcement (scripts/safety-policy-check.py)
@@ -136,6 +143,7 @@ strategy:
 **File**: `.github/workflows/ci-post-merge.yml`
 
 **Trigger**:
+
 ```yaml
 on:
   push:
@@ -146,6 +154,7 @@ on:
 **Conditions**: Skips if commit message starts with `chore:` or `docs:`
 
 **Steps**:
+
 1. Checkout with full history
 2. Setup Python 3.12
 3. Install commitizen
@@ -168,6 +177,7 @@ on:
 **File**: `.github/workflows/codeql.yml`
 
 **Triggers**:
+
 - Pull requests to main
 - Weekly schedule (Mondays at 00:00 UTC)
 - Manual workflow dispatch
@@ -190,24 +200,27 @@ on:
 
 ### Platform Details
 
-| OS Label | Actual Version | Architecture | Why Included |
-|----------|----------------|--------------|--------------|
-| ubuntu-latest | Ubuntu 24.04 | x86_64 | Current LTS |
-| ubuntu-22.04 | Ubuntu 22.04 | x86_64 | Previous LTS, most Linux users |
-| windows-latest | Windows Server 2025 | x86_64 | Newest Windows |
-| windows-2022 | Windows Server 2022 | x86_64 | Most Windows users |
-| macos-latest | macOS 15 Sequoia | ARM64 (Apple Silicon) | Future of Mac |
-| macos-14 | macOS 14 Sonoma | ARM64 (Apple Silicon) | Current Mac users |
+| OS Label       | Actual Version      | Architecture          | Why Included                   |
+| -------------- | ------------------- | --------------------- | ------------------------------ |
+| ubuntu-latest  | Ubuntu 24.04        | x86_64                | Current LTS                    |
+| ubuntu-22.04   | Ubuntu 22.04        | x86_64                | Previous LTS, most Linux users |
+| windows-latest | Windows Server 2025 | x86_64                | Newest Windows                 |
+| windows-2022   | Windows Server 2022 | x86_64                | Most Windows users             |
+| macos-latest   | macOS 15 Sequoia    | ARM64 (Apple Silicon) | Future of Mac                  |
+| macos-14       | macOS 14 Sonoma     | ARM64 (Apple Silicon) | Current Mac users              |
 
 **Architecture Coverage**:
+
 - x86_64: Ubuntu, Windows
 - ARM64: macOS (Apple Silicon is the future, Intel becoming legacy)
 
 **Python Versions**:
+
 - 3.12: Current stable, production-ready
 - 3.13: Latest release, early adopters
 
 **Node.js Version**:
+
 - 20.x LTS: Active LTS, stable for production
 
 ---
@@ -217,18 +230,21 @@ on:
 ### Cache Paths
 
 **Linux/macOS**:
+
 ```yaml
 - ~/.cache/uv
 - ~/.cache/pip
-- ~/Library/Caches/uv  # macOS specific
+- ~/Library/Caches/uv # macOS specific
 ```
 
 **Windows**:
+
 ```yaml
 - ~/AppData/Local/uv/cache
 ```
 
 **Frontend**:
+
 ```yaml
 - frontend/node_modules
 ```
@@ -236,11 +252,13 @@ on:
 ### Cache Keys
 
 Primary key:
+
 ```
 ${{ runner.os }}-deps-py${{ matrix.python-version }}-node${{ matrix.node-version }}-${{ hashFiles('**/pyproject.toml', '**/package-lock.json') }}
 ```
 
 Fallback keys:
+
 ```
 ${{ runner.os }}-deps-py${{ matrix.python-version }}-node${{ matrix.node-version }}-
 ${{ runner.os }}-deps-
@@ -248,10 +266,10 @@ ${{ runner.os }}-deps-
 
 ### Cache Performance
 
-| Scenario | First Run | Cached Run | Improvement |
-|----------|-----------|------------|-------------|
-| Feature Branch | 8-10 min | 3-5 min | ~50% faster |
-| PR to Main | 12-18 min | 10-15 min | ~30% faster |
+| Scenario       | First Run | Cached Run | Improvement |
+| -------------- | --------- | ---------- | ----------- |
+| Feature Branch | 8-10 min  | 3-5 min    | ~50% faster |
+| PR to Main     | 12-18 min | 10-15 min  | ~30% faster |
 
 **Cache Invalidation**: Automatic when `pyproject.toml` or `package-lock.json` changes
 
@@ -263,12 +281,12 @@ ${{ runner.os }}-deps-
 
 Implemented in `scripts/safety-policy-check.py`:
 
-| Dependency Type | Severity | Action |
-|-----------------|----------|--------|
-| Production | CRITICAL/HIGH | ❌ Block merge |
-| Production | MEDIUM/LOW | ⚠️ Warn |
-| Development | CRITICAL/HIGH | ❌ Block merge |
-| Development | MEDIUM/LOW | ⚠️ Warn (can address later) |
+| Dependency Type | Severity      | Action                      |
+| --------------- | ------------- | --------------------------- |
+| Production      | CRITICAL/HIGH | ❌ Block merge              |
+| Production      | MEDIUM/LOW    | ⚠️ Warn                     |
+| Development     | CRITICAL/HIGH | ❌ Block merge              |
+| Development     | MEDIUM/LOW    | ⚠️ Warn (can address later) |
 
 ### Security Tools
 
@@ -297,6 +315,7 @@ Implemented in `scripts/safety-policy-check.py`:
 ### Required Checks (15 total)
 
 **Matrix Tests (12 checks)**:
+
 - `comprehensive-validation (ubuntu-latest, 3.12)`
 - `comprehensive-validation (ubuntu-latest, 3.13)`
 - `comprehensive-validation (ubuntu-22.04, 3.12)`
@@ -311,11 +330,13 @@ Implemented in `scripts/safety-policy-check.py`:
 - `comprehensive-validation (macos-14, 3.13)`
 
 **Security & Quality (3 checks)**:
+
 - `security-scan`
 - `CodeQL Analysis (python)`
 - `CodeQL Analysis (javascript)`
 
 **Additional Requirements**:
+
 - 1 code review approval
 - All conversations resolved
 - Branch up to date with main
@@ -329,6 +350,7 @@ Implemented in `scripts/safety-policy-check.py`:
 ### Workflow A Failures
 
 **Linting errors**:
+
 ```bash
 # Fix locally
 just lint
@@ -338,6 +360,7 @@ just format
 ```
 
 **Type errors**:
+
 ```bash
 # See errors
 just type-check
@@ -346,6 +369,7 @@ just type-check
 ```
 
 **Test failures**:
+
 ```bash
 # Run tests locally
 just test
@@ -356,12 +380,14 @@ just test
 ### Workflow B Failures
 
 **Platform-specific test failure**:
+
 - Check which OS/Python combination failed
 - Likely causes: Path separators, line endings, locale
 - Test locally on that platform or use Docker
 - Fix and push
 
 **Coverage below 80%**:
+
 ```bash
 # Generate HTML coverage report
 just test
@@ -371,6 +397,7 @@ start htmlcov/index.html  # Windows
 ```
 
 **Security scan blocking**:
+
 - Review bandit-report.json or safety-report.json in artifacts
 - Fix code issues (Bandit) or update dependencies (Safety)
 - HIGH/CRITICAL must be fixed before merge
@@ -378,11 +405,13 @@ start htmlcov/index.html  # Windows
 ### Workflow C Issues
 
 **Version bump failed**:
+
 - Check commit message follows Conventional Commits
 - Verify pyproject.toml has correct version field
 - Check git tags for conflicts
 
 **Release creation failed**:
+
 - Verify GITHUB_TOKEN has permissions
 - Check if tag already exists
 - Review workflow logs for details
@@ -394,11 +423,13 @@ start htmlcov/index.html  # Windows
 ### Current Performance
 
 **Workflow A** (Feature Branch):
+
 - Without cache: ~8-10 minutes
 - With cache: ~3-5 minutes
 - **Improvement needed if**: Exceeds 5 minutes regularly
 
 **Workflow B** (PR to Main):
+
 - Without cache: ~15-20 minutes
 - With cache: ~10-15 minutes
 - **Improvement needed if**: Exceeds 15 minutes regularly
@@ -428,6 +459,7 @@ start htmlcov/index.html  # Windows
 ### Monitoring
 
 Track workflow performance:
+
 ```bash
 # Get workflow run times
 gh run list --workflow=ci-feature-branch.yml --limit=10
@@ -450,10 +482,12 @@ gh run view <run-id> --log
 ### Current Usage Estimates
 
 **Per Feature Push** (Workflow A):
+
 - 3 jobs × 5 minutes = 15 minutes
 - 1 Linux + 1 Windows + 1 macOS = ~15 counted minutes
 
 **Per PR to Main** (Workflow B):
+
 - 12 matrix jobs × 12 minutes = 144 wall-clock minutes
 - Breakdown:
   - 4 Ubuntu jobs × 12 min × 1x = 48 minutes
@@ -462,6 +496,7 @@ gh run view <run-id> --log
 - **Total**: ~624 counted minutes per PR
 
 **Monthly Estimate** (Active Development):
+
 - 10 feature pushes: ~150 minutes
 - 2 PRs to main: ~1,248 minutes
 - **Total**: ~1,400 minutes/month
@@ -473,13 +508,13 @@ gh run view <run-id> --log
 
 ## Workflow Triggers Reference
 
-| Event | Workflows Triggered | Purpose |
-|-------|---------------------|---------|
-| Push to feature branch | Workflow A | Fast feedback |
-| Create PR to main | Workflow B + CodeQL | Comprehensive validation |
-| Push to main (after merge) | Workflow C | Release automation |
-| Weekly (Monday 00:00 UTC) | CodeQL | Scheduled security scan |
-| Manual trigger | CodeQL | On-demand security analysis |
+| Event                      | Workflows Triggered | Purpose                     |
+| -------------------------- | ------------------- | --------------------------- |
+| Push to feature branch     | Workflow A          | Fast feedback               |
+| Create PR to main          | Workflow B + CodeQL | Comprehensive validation    |
+| Push to main (after merge) | Workflow C          | Release automation          |
+| Weekly (Monday 00:00 UTC)  | CodeQL              | Scheduled security scan     |
+| Manual trigger             | CodeQL              | On-demand security analysis |
 
 ---
 
@@ -570,6 +605,7 @@ gh pr merge --squash
 To add a new required check to the pipeline:
 
 1. **Add to Workflow**: Update `.github/workflows/ci-pr-main.yml`
+
    ```yaml
    - name: My New Check
      run: |
@@ -597,6 +633,5 @@ To add a new required check to the pipeline:
 
 ---
 
-**Last Updated**: October 20, 2025  
+**Last Updated**: October 20, 2025
 **Maintained By**: Iris Development Team
-

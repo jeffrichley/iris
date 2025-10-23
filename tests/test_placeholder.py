@@ -38,4 +38,3 @@ def test_version_exists() -> None:
 
     assert hasattr(iris, "__version__")
     assert iris.__version__ == "0.1.0"
-

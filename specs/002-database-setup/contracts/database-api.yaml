@@ -1,0 +1,778 @@
+openapi: 3.0.3
+info:
+  title: Iris Project Management API
+  description: REST API for Iris project management system data operations
+  version: 1.0.0
+  contact:
+    name: Iris Development Team
+    email: dev@iris.example.com
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Development server
+  - url: https://api.iris.example.com/v1
+    description: Production server
+
+paths:
+  /projects:
+    get:
+      summary: List projects
+      description: Get all projects with optional filtering
+      tags:
+        - Projects
+      parameters:
+        - name: status
+          in: query
+          description: Filter by project status
+          required: false
+          schema:
+            type: string
+            enum: [active, completed, paused]
+        - name: limit
+          in: query
+          description: Maximum number of projects to return
+          required: false
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          description: Number of projects to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+    post:
+      summary: Create project
+      description: Create a new project
+      tags:
+        - Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectRequest'
+      responses:
+        '201':
+          description: Project created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /projects/{project_id}:
+    get:
+      summary: Get project
+      description: Get a specific project by ID
+      tags:
+        - Projects
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Update project
+      description: Update an existing project
+      tags:
+        - Projects
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProjectRequest'
+      responses:
+        '200':
+          description: Project updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete project
+      description: Delete a project and all associated data
+      tags:
+        - Projects
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Project deleted successfully
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /projects/{project_id}/tasks:
+    get:
+      summary: List project tasks
+      description: Get all tasks for a specific project
+      tags:
+        - Tasks
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: completed
+          in: query
+          description: Filter by completion status
+          required: false
+          schema:
+            type: boolean
+        - name: priority
+          in: query
+          description: Filter by priority
+          required: false
+          schema:
+            type: string
+            enum: [low, medium, high, urgent]
+      responses:
+        '200':
+          description: List of project tasks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+                  total:
+                    type: integer
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Create task
+      description: Create a new task for a project
+      tags:
+        - Tasks
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /tasks/{task_id}:
+    get:
+      summary: Get task
+      description: Get a specific task by ID
+      tags:
+        - Tasks
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Update task
+      description: Update an existing task
+      tags:
+        - Tasks
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete task
+      description: Delete a task
+      tags:
+        - Tasks
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Task deleted successfully
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ideas:
+    get:
+      summary: List ideas
+      description: Get all ideas with optional filtering
+      tags:
+        - Ideas
+      parameters:
+        - name: project_id
+          in: query
+          description: Filter by project ID
+          required: false
+          schema:
+            type: integer
+        - name: promoted
+          in: query
+          description: Filter by promotion status
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of ideas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ideas:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Idea'
+                  total:
+                    type: integer
+    post:
+      summary: Create idea
+      description: Create a new idea
+      tags:
+        - Ideas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIdeaRequest'
+      responses:
+        '201':
+          description: Idea created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Idea'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /reminders:
+    get:
+      summary: List reminders
+      description: Get all reminders with optional filtering
+      tags:
+        - Reminders
+      parameters:
+        - name: project_id
+          in: query
+          description: Filter by project ID
+          required: false
+          schema:
+            type: integer
+        - name: task_id
+          in: query
+          description: Filter by task ID
+          required: false
+          schema:
+            type: integer
+        - name: due_before
+          in: query
+          description: Filter by due time
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: List of reminders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reminders:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Reminder'
+                  total:
+                    type: integer
+    post:
+      summary: Create reminder
+      description: Create a new reminder
+      tags:
+        - Reminders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReminderRequest'
+      responses:
+        '201':
+          description: Reminder created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /notes:
+    get:
+      summary: List notes
+      description: Get all notes with optional filtering
+      tags:
+        - Notes
+      parameters:
+        - name: project_id
+          in: query
+          description: Filter by project ID
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of notes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Note'
+                  total:
+                    type: integer
+    post:
+      summary: Create note
+      description: Create a new note
+      tags:
+        - Notes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNoteRequest'
+      responses:
+        '201':
+          description: Note created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "My Project"
+        description:
+          type: string
+          example: "A sample project"
+        status:
+          type: string
+          enum: [active, completed, paused]
+          example: "active"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-12-19T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-12-19T10:30:00Z"
+
+    CreateProjectRequest:
+      type: object
+      required: [name, status]
+      properties:
+        name:
+          type: string
+          example: "My Project"
+        description:
+          type: string
+          example: "A sample project"
+        status:
+          type: string
+          enum: [active, completed, paused]
+          example: "active"
+
+    UpdateProjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Updated Project Name"
+        description:
+          type: string
+          example: "Updated project description"
+        status:
+          type: string
+          enum: [active, completed, paused]
+          example: "active"
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        project_id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Complete task"
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          example: "medium"
+        due_date:
+          type: string
+          format: date
+          example: "2024-12-25"
+        completed:
+          type: boolean
+          example: false
+        notes:
+          type: string
+          example: "Task notes"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-12-19T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-12-19T10:30:00Z"
+
+    CreateTaskRequest:
+      type: object
+      required: [title, priority]
+      properties:
+        title:
+          type: string
+          example: "Complete task"
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          example: "medium"
+        due_date:
+          type: string
+          format: date
+          example: "2024-12-25"
+        notes:
+          type: string
+          example: "Task notes"
+
+    UpdateTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Updated task title"
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          example: "high"
+        due_date:
+          type: string
+          format: date
+          example: "2024-12-26"
+        completed:
+          type: boolean
+          example: true
+        notes:
+          type: string
+          example: "Updated task notes"
+
+    Idea:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        project_id:
+          type: integer
+          nullable: true
+          example: 1
+        title:
+          type: string
+          example: "Great idea"
+        description:
+          type: string
+          example: "A brilliant idea for the project"
+        promoted_to_project:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-12-19T10:30:00Z"
+
+    CreateIdeaRequest:
+      type: object
+      required: [title]
+      properties:
+        project_id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Great idea"
+        description:
+          type: string
+          example: "A brilliant idea for the project"
+
+    Reminder:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        project_id:
+          type: integer
+          nullable: true
+          example: 1
+        task_id:
+          type: integer
+          nullable: true
+          example: 1
+        message:
+          type: string
+          example: "Don't forget to complete the task"
+        due_time:
+          type: string
+          format: date-time
+          example: "2024-12-20T15:00:00Z"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-12-19T10:30:00Z"
+
+    CreateReminderRequest:
+      type: object
+      required: [message, due_time]
+      properties:
+        project_id:
+          type: integer
+          example: 1
+        task_id:
+          type: integer
+          example: 1
+        message:
+          type: string
+          example: "Don't forget to complete the task"
+        due_time:
+          type: string
+          format: date-time
+          example: "2024-12-20T15:00:00Z"
+
+    Note:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        project_id:
+          type: integer
+          nullable: true
+          example: 1
+        content:
+          type: string
+          example: "Important project notes"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-12-19T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-12-19T10:30:00Z"
+
+    CreateNoteRequest:
+      type: object
+      required: [content]
+      properties:
+        project_id:
+          type: integer
+          example: 1
+        content:
+          type: string
+          example: "Important project notes"
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Project not found"
+        message:
+          type: string
+          example: "The requested project could not be found"
+        code:
+          type: string
+          example: "PROJECT_NOT_FOUND"
+
+tags:
+  - name: Projects
+    description: Project management operations
+  - name: Tasks
+    description: Task management operations
+  - name: Ideas
+    description: Idea management operations
+  - name: Reminders
+    description: Reminder management operations
+  - name: Notes
+    description: Note management operations

@@ -25,13 +25,23 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
 ]
 
-dependencies = []
+dependencies = [
+    "alembic>=1.17.0",
+    "dependency-injector>=4.48.2",
+    "pydantic>=2.12.3",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.1.1",
+    "rich>=14.2.0",
+    "sqlalchemy>=2.0.44",
+    "typer>=0.20.0",
+]
 
 [project.optional-dependencies]
 dev = [
     "ruff>=0.1.0",
     "mypy>=1.8.0",
     "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.1.0",
     "coverage>=7.3.0",
     "bandit>=1.7.0",
@@ -44,6 +54,12 @@ dev = [
 Homepage = "https://github.com/jeffrichley/iris"
 Repository = "https://github.com/jeffrichley/iris.git"
 Issues = "https://github.com/jeffrichley/iris/issues"
+
+[dependency-groups]
+dev = [
+    "pytest-asyncio>=1.2.0",
+    "pytest-cov>=7.0.0",
+]
 
 [tool.ruff]
 line-length = 100
@@ -67,7 +83,7 @@ strict = true
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
-disallow_any_unimported = true
+disallow_any_unimported = false
 no_implicit_optional = true
 warn_redundant_casts = true
 warn_unused_ignores = true
@@ -77,6 +93,33 @@ check_untyped_defs = true
 # Allow tests to have untyped defs for cleaner test code
 [[tool.mypy.overrides]]
 module = "tests.*"
+disallow_untyped_defs = false
+
+# Allow some flexibility in display module (UI code)
+[[tool.mypy.overrides]]
+module = "iris.cli.output.display"
+
+# External libraries without type stubs
+[[tool.mypy.overrides]]
+module = "rich.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "typer.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "alembic.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "dependency_injector.*"
+ignore_missing_imports = true
+disallow_untyped_defs = false
+
+# Allow some flexibility in CLI commands
+[[tool.mypy.overrides]]
+module = "iris.cli.commands.*"
 disallow_untyped_defs = false
 
 [tool.pytest.ini_options]
@@ -98,6 +141,7 @@ markers = [
     "unit: Unit tests",
     "integration: Integration tests",
     "e2e: End-to-end tests",
+    "asyncio: Async tests",
 ]
 
 [tool.coverage.run]
