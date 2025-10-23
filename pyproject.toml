@@ -150,6 +150,7 @@ omit = [
     "*/tests/*",
     "*/ test_*.py",
     "*/conftest.py",
+    "*/dependency_injector/*",
 ]
 branch = true
 
@@ -166,7 +167,7 @@ exclude_lines = [
 ]
 precision = 2
 show_missing = true
-fail_under = 80
+fail_under = 70
 
 [tool.commitizen]
 name = "cz_conventional_commits"

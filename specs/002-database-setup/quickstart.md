@@ -33,7 +33,7 @@ Create a `.env` file in your project root:
 ```bash
 # Database Configuration
 DATABASE_URL=sqlite:///./.iris/iris.db
-# For PostgreSQL: postgresql://user:password@localhost:5432/iris
+# For PostgreSQL: postgresql://user:password@localhost:5432/iris  # pragma: allowlist secret
 
 # Connection Settings
 DB_HOST=localhost
@@ -207,7 +207,7 @@ psql -U postgres
 
 -- Create database and user
 CREATE DATABASE iris;
-CREATE USER iris_user WITH PASSWORD 'your_password';
+CREATE USER iris_user WITH PASSWORD 'your_password';  -- pragma: allowlist secret
 GRANT ALL PRIVILEGES ON DATABASE iris TO iris_user;
 ```
 
@@ -215,7 +215,7 @@ GRANT ALL PRIVILEGES ON DATABASE iris TO iris_user;
 
 ```bash
 # Production .env
-DATABASE_URL=postgresql://iris_user:your_password@localhost:5432/iris
+DATABASE_URL=postgresql://iris_user:your_password@localhost:5432/iris  # pragma: allowlist secret
 ENVIRONMENT=production
 DB_POOL_SIZE=10
 DB_POOL_TIMEOUT=600

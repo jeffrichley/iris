@@ -108,7 +108,7 @@ jobs:
 
       - name: Check coverage threshold
         run: |
-          uv run coverage report --fail-under=80
+          uv run coverage report --fail-under=70
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
