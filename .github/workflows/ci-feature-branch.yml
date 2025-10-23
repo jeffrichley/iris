@@ -73,7 +73,7 @@ jobs:
 
       - name: Run Python type checking
         run: |
-          uv run mypy src/ --ignore-missing-imports
+          uv run mypy src/ --ignore-missing-imports --explicit-package-bases
 
       - name: Run frontend linting (if exists)
         run: |

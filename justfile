@@ -50,7 +50,7 @@ format:
 # Run type checking
 type-check:
     @echo "Running Python type checking..."
-    uv run mypy src/ --ignore-missing-imports
+    uv run mypy src/ --ignore-missing-imports --explicit-package-bases
 
 # Run tests
 test:
