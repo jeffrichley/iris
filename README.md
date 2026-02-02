@@ -22,6 +22,7 @@ A local-first personal project management assistant powered by AI.
 ### Install just (Task Runner)
 
 **macOS/Linux**:
+
 ```bash
 # Using Homebrew
 brew install just
@@ -31,6 +32,7 @@ cargo install just
 ```
 
 **Windows**:
+
 ```powershell
 # Using Scoop
 scoop install just
@@ -44,22 +46,25 @@ cargo install just
 ### Development Setup
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/jeffrichley/iris.git
    cd iris
    ```
 
 2. **Install dependencies**:
+
    ```bash
    uv sync --dev
    ```
 
 3. **Install pre-commit hooks** (recommended):
+
    ```bash
    just setup-hooks
    ```
 
-   **What are pre-commit hooks?**  
+   **What are pre-commit hooks?**
    Automated checks that run before each commit to catch issues early:
    - ✅ Auto-format Python (ruff) and TypeScript (prettier)
    - ✅ Check types (mypy for Python, TypeScript compiler)
@@ -80,7 +85,7 @@ Run `just` to see all available commands:
 
 ```bash
 just lint          # Run linting
-just test          # Run tests  
+just test          # Run tests
 just type-check    # Run type checking
 just format        # Format code
 just ci            # Run all checks (lint + type-check + test)
@@ -104,17 +109,17 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) f
 
 ### Types
 
-| Type | Use For | Example |
-|------|---------|---------|
-| `feat` | New features | `feat(auth): add OAuth2 support` |
-| `fix` | Bug fixes | `fix(sync): resolve conflict resolution` |
-| `docs` | Documentation | `docs(api): update authentication guide` |
-| `style` | Code style (no logic change) | `style(ui): adjust button spacing` |
-| `refactor` | Code restructuring | `refactor(db): simplify query builder` |
-| `perf` | Performance improvements | `perf(search): add index on task title` |
-| `test` | Tests | `test(tasks): add edge case coverage` |
-| `chore` | Build, tooling, dependencies | `chore(deps): update ruff to 0.2.0` |
-| `ci` | CI configuration | `ci: optimize cache strategy` |
+| Type       | Use For                      | Example                                  |
+| ---------- | ---------------------------- | ---------------------------------------- |
+| `feat`     | New features                 | `feat(auth): add OAuth2 support`         |
+| `fix`      | Bug fixes                    | `fix(sync): resolve conflict resolution` |
+| `docs`     | Documentation                | `docs(api): update authentication guide` |
+| `style`    | Code style (no logic change) | `style(ui): adjust button spacing`       |
+| `refactor` | Code restructuring           | `refactor(db): simplify query builder`   |
+| `perf`     | Performance improvements     | `perf(search): add index on task title`  |
+| `test`     | Tests                        | `test(tasks): add edge case coverage`    |
+| `chore`    | Build, tooling, dependencies | `chore(deps): update ruff to 0.2.0`      |
+| `ci`       | CI configuration             | `ci: optimize cache strategy`            |
 
 ### Interactive Commit (Recommended)
 

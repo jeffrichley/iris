@@ -8,11 +8,11 @@ This roadmap outlines the phased development plan for **Project Iris**, starting
 
 ## 2. Guiding Principles
 
-* **User-first:** Prioritize clear value for Jeff as the primary user before generalization.
-* **Local-first:** Maintain offline functionality with seamless cloud synchronization.
-* **Incremental intelligence:** Introduce AI and agents only after stable manual workflows.
-* **Dogfooding:** Use Iris to manage Iris’s own development cycle.
-* **Transparency:** Track every phase with living documentation (PRD, Architecture, Sprints, OKRs).
+- **User-first:** Prioritize clear value for Jeff as the primary user before generalization.
+- **Local-first:** Maintain offline functionality with seamless cloud synchronization.
+- **Incremental intelligence:** Introduce AI and agents only after stable manual workflows.
+- **Dogfooding:** Use Iris to manage Iris’s own development cycle.
+- **Transparency:** Track every phase with living documentation (PRD, Architecture, Sprints, OKRs).
 
 ---
 
@@ -36,15 +36,15 @@ This roadmap outlines the phased development plan for **Project Iris**, starting
 
 **Deliverables:**
 
-* ✅ `PRD.md` — Problem, goals, and success metrics.
-* ✅ `ARCHITECTURE.md` — Full system layout and data model.
-* ✅ `ROADMAP.md` — This document.
-* 🧱 Repo scaffolding with folders for backend, frontend, and configs.
+- ✅ `PRD.md` — Problem, goals, and success metrics.
+- ✅ `ARCHITECTURE.md` — Full system layout and data model.
+- ✅ `ROADMAP.md` — This document.
+- 🧱 Repo scaffolding with folders for backend, frontend, and configs.
 
 **Success Criteria:**
 
-* Approved architecture and scope.
-* Clear definition of what MVP delivers.
+- Approved architecture and scope.
+- Clear definition of what MVP delivers.
 
 ---
 
@@ -55,25 +55,25 @@ This roadmap outlines the phased development plan for **Project Iris**, starting
 
 **Key Features:**
 
-* Project and task CRUD operations.
-* Good Idea Fairy (idea inbox → convert to project).
-* Dashboard overview with filters and due dates.
-* Daily briefing and notification system.
-* Supabase sync + local SQLite persistence.
-* Use Iris to track her own development (meta-project).
+- Project and task CRUD operations.
+- Good Idea Fairy (idea inbox → convert to project).
+- Dashboard overview with filters and due dates.
+- Daily briefing and notification system.
+- Supabase sync + local SQLite persistence.
+- Use Iris to track her own development (meta-project).
 
 **Deliverables:**
 
-* MVP UI (Tauri + React + Tailwind).
-* FastAPI backend + SQLite schema.
-* Supabase cloud sync.
-* `SPRINTS.md` file with weekly breakdowns.
+- MVP UI (Tauri + React + Tailwind).
+- FastAPI backend + SQLite schema.
+- Supabase cloud sync.
+- `SPRINTS.md` file with weekly breakdowns.
 
 **Success Criteria:**
 
-* All tasks/projects managed inside Iris for ≥2 weeks.
-* Zero data loss across offline/online transitions.
-* Internal dogfooding complete.
+- All tasks/projects managed inside Iris for ≥2 weeks.
+- Zero data loss across offline/online transitions.
+- Internal dogfooding complete.
 
 ---
 
@@ -84,22 +84,22 @@ This roadmap outlines the phased development plan for **Project Iris**, starting
 
 **Key Features:**
 
-* LangGraph-based Task, Reminder, and Summary agents.
-* MCP tool registry (get_tasks, add_task, summarize_notes).
-* Agent can generate daily reports or summaries.
-* `MCP_TOOLS.md` created and maintained.
+- LangGraph-based Task, Reminder, and Summary agents.
+- MCP tool registry (get_tasks, add_task, summarize_notes).
+- Agent can generate daily reports or summaries.
+- `MCP_TOOLS.md` created and maintained.
 
 **Deliverables:**
 
-* MCP server and registry YAML.
-* Updated `ARCHITECTURE.md` and `PRD.md`.
-* Basic agent evaluation tests.
+- MCP server and registry YAML.
+- Updated `ARCHITECTURE.md` and `PRD.md`.
+- Basic agent evaluation tests.
 
 **Success Criteria:**
 
-* Iris autonomously generates daily summaries.
-* Agents execute CRUD operations via MCP tools.
-* Iris can manage her own sprint updates.
+- Iris autonomously generates daily summaries.
+- Agents execute CRUD operations via MCP tools.
+- Iris can manage her own sprint updates.
 
 ---
 
@@ -110,16 +110,16 @@ This roadmap outlines the phased development plan for **Project Iris**, starting
 
 **Key Features:**
 
-* Text chat UI.
-* LangGraph conversation orchestration.
-* Optional voice input/output (Whisper + Coqui).
-* Chat actions mapped to existing MCP tools.
+- Text chat UI.
+- LangGraph conversation orchestration.
+- Optional voice input/output (Whisper + Coqui).
+- Chat actions mapped to existing MCP tools.
 
 **Success Criteria:**
 
-* Natural chat flow controlling all Iris functions.
-* Voice optional but supported.
-* Stable real-time event handling between UI ↔ backend.
+- Natural chat flow controlling all Iris functions.
+- Voice optional but supported.
+- Stable real-time event handling between UI ↔ backend.
 
 ---
 
@@ -130,19 +130,19 @@ This roadmap outlines the phased development plan for **Project Iris**, starting
 
 **Key Integrations:**
 
-* Google Calendar (events & reminders).
-* GitHub (project + issue sync).
-* Drive/Docs (research materials).
+- Google Calendar (events & reminders).
+- GitHub (project + issue sync).
+- Drive/Docs (research materials).
 
 **Deliverables:**
 
-* OAuth layer + integration UI.
-* Updated OKRs for cross-project management.
+- OAuth layer + integration UI.
+- Updated OKRs for cross-project management.
 
 **Success Criteria:**
 
-* Iris syncs and displays data from multiple services.
-* Cross-tool context awareness operational.
+- Iris syncs and displays data from multiple services.
+- Cross-tool context awareness operational.
 
 ---
 
@@ -153,14 +153,14 @@ This roadmap outlines the phased development plan for **Project Iris**, starting
 
 **Key Features:**
 
-* Predictive task generation and scheduling.
-* Contextual insights (“You’re overloaded this week — suggest re-prioritization?”).
-* Adaptive voice and behavior tuning.
+- Predictive task generation and scheduling.
+- Contextual insights (“You’re overloaded this week — suggest re-prioritization?”).
+- Adaptive voice and behavior tuning.
 
 **Success Criteria:**
 
-* Iris manages herself and other projects without manual prompting.
-* Continuous learning feedback loop from user behavior.
+- Iris manages herself and other projects without manual prompting.
+- Continuous learning feedback loop from user behavior.
 
 ---
 
@@ -190,9 +190,9 @@ This roadmap outlines the phased development plan for **Project Iris**, starting
 
 ## 12. Review Cycle
 
-* **Review Frequency:** Monthly internal reviews.
-* **Artifact Updates:** PRD, Architecture, and Roadmap updated at each phase.
-* **Source of Truth:** Iris project repo (docs/ folder) with version-controlled artifacts.
+- **Review Frequency:** Monthly internal reviews.
+- **Artifact Updates:** PRD, Architecture, and Roadmap updated at each phase.
+- **Source of Truth:** Iris project repo (docs/ folder) with version-controlled artifacts.
 
 ---
 

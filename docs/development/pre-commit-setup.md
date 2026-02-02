@@ -39,12 +39,14 @@ pre-commit run --all-files
 ### Python Code
 
 **Ruff (Linter & Formatter)**:
+
 - Automatically fixes import sorting
 - Enforces code style (100 char line length)
 - Catches common errors (unused imports, undefined variables)
 - Auto-formats code to match project standards
 
 **Mypy (Type Checker)**:
+
 - Enforces strict type checking
 - Catches type errors before runtime
 - Ensures type hints are present and correct
@@ -52,12 +54,14 @@ pre-commit run --all-files
 ### TypeScript/React Code
 
 **ESLint**:
+
 - Enforces TypeScript best practices
 - Validates React hooks usage
 - Checks accessibility (a11y) compliance
 - Auto-fixes many issues
 
 **Prettier**:
+
 - Consistent code formatting
 - Handles JS, TS, JSON, CSS, Markdown
 - Auto-formats on commit
@@ -65,12 +69,14 @@ pre-commit run --all-files
 ### Secret Detection
 
 **detect-secrets**:
+
 - Scans for API keys, tokens, passwords, and credentials
 - Prevents accidental commit of sensitive data
 - Uses baseline file (.secrets.baseline) for false positive management
 - Detects: AWS keys, GitHub tokens, API keys, private keys, JWT tokens, and more
 
 **What it catches**:
+
 - API keys and tokens (AWS, Azure, GitHub, Slack, Stripe, etc.)
 - Private SSH/PGP keys
 - Basic auth credentials
@@ -81,11 +87,13 @@ pre-commit run --all-files
 ### Commit Messages
 
 **Commitizen (Conventional Commits)**:
+
 - Enforces commit message format: `type(scope): description`
 - Blocks improperly formatted messages
 - Interactive mode guides you through creating proper commits
 
 **Valid commit types**:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -99,6 +107,7 @@ pre-commit run --all-files
 - `revert`: Revert previous commit
 
 **Examples**:
+
 ```bash
 # Good commit messages
 feat(auth): add OAuth2 support
@@ -171,7 +180,7 @@ git add .
 just commit
 
 # You'll be prompted:
-? Select the type of change you are committing: 
+? Select the type of change you are committing:
   ❯ feat: A new feature
     fix: A bug fix
     docs: Documentation only changes
@@ -181,7 +190,7 @@ just commit
 
 ? Write a short, imperative description of the change: add OAuth2 support
 
-? Provide additional contextual information (press enter to skip): 
+? Provide additional contextual information (press enter to skip):
 
 ? Are there any breaking changes? (Y/n): n
 
@@ -206,6 +215,7 @@ git commit --no-verify -m "message"
 **Problem**: Pre-commit runs on many files
 
 **Solution**: Only commit specific files
+
 ```bash
 git add specific_file.py
 git commit
@@ -216,6 +226,7 @@ git commit
 **Problem**: Pre-commit cache corruption
 
 **Solution**: Clean and reinstall
+
 ```bash
 pre-commit clean
 pre-commit install --install-hooks
@@ -262,31 +273,31 @@ git commit -m "chore: update pre-commit hooks"
 
 ### Do
 
-✅ Install hooks on every new clone  
-✅ Run `pre-commit run --all-files` after updating hooks  
-✅ Commit frequently with small changesets  
-✅ Fix issues highlighted by hooks  
+✅ Install hooks on every new clone
+✅ Run `pre-commit run --all-files` after updating hooks
+✅ Commit frequently with small changesets
+✅ Fix issues highlighted by hooks
 ✅ Keep hooks updated quarterly
 
 ### Don't
 
-❌ Bypass hooks without good reason  
-❌ Commit large changesets (hooks run on all changed files)  
-❌ Ignore type errors (they'll fail in CI anyway)  
+❌ Bypass hooks without good reason
+❌ Commit large changesets (hooks run on all changed files)
+❌ Ignore type errors (they'll fail in CI anyway)
 ❌ Disable specific hooks without team discussion
 
 ## Integration with CI
 
 Pre-commit hooks run **locally**. CI runs the same checks **in the cloud**:
 
-| Check | Local (Pre-commit) | CI (GitHub Actions) |
-|-------|-------------------|---------------------|
-| Ruff lint/format | ✅ Auto-fix | ✅ Verify (fail if unfixed) |
-| Mypy type check | ✅ Block commit | ✅ Fail build |
-| ESLint | ✅ Auto-fix | ✅ Verify |
-| Prettier | ✅ Auto-format | ✅ Verify |
-| Tests | ❌ Not in pre-commit | ✅ Full suite + coverage |
-| Security scans | ❌ Not in pre-commit | ✅ Bandit, Safety, CodeQL |
+| Check            | Local (Pre-commit)   | CI (GitHub Actions)         |
+| ---------------- | -------------------- | --------------------------- |
+| Ruff lint/format | ✅ Auto-fix          | ✅ Verify (fail if unfixed) |
+| Mypy type check  | ✅ Block commit      | ✅ Fail build               |
+| ESLint           | ✅ Auto-fix          | ✅ Verify                   |
+| Prettier         | ✅ Auto-format       | ✅ Verify                   |
+| Tests            | ❌ Not in pre-commit | ✅ Full suite + coverage    |
+| Security scans   | ❌ Not in pre-commit | ✅ Bandit, Safety, CodeQL   |
 
 **Philosophy**: Hooks catch **quick** issues locally. CI runs **comprehensive** validation.
 
@@ -298,6 +309,5 @@ Pre-commit hooks run **locally**. CI runs the same checks **in the cloud**:
 
 ---
 
-**Last Updated**: October 20, 2025  
+**Last Updated**: October 20, 2025
 **Maintained By**: Iris Development Team
-

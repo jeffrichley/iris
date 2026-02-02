@@ -1,7 +1,7 @@
 # Research: CI & Pre-commit Strategy
 
-**Feature**: 001-ci-precommit-setup  
-**Date**: October 20, 2025  
+**Feature**: 001-ci-precommit-setup
+**Date**: October 20, 2025
 **Status**: Complete
 
 ## Overview
@@ -26,11 +26,11 @@ Use **ruff** as the sole Python linter and formatter (no black, no flake8, no is
 
 ### Alternatives Considered
 
-| Tool | Why Rejected |
-|------|--------------|
-| black + flake8 + isort | Multiple tools = slower CI, more config complexity |
-| pylint | Slower, more opinionated, overlaps with mypy for many checks |
-| autopep8 | Less comprehensive, doesn't replace all linting needs |
+| Tool                   | Why Rejected                                                 |
+| ---------------------- | ------------------------------------------------------------ |
+| black + flake8 + isort | Multiple tools = slower CI, more config complexity           |
+| pylint                 | Slower, more opinionated, overlaps with mypy for many checks |
+| autopep8               | Less comprehensive, doesn't replace all linting needs        |
 
 ### Configuration
 
@@ -72,11 +72,11 @@ Use **mypy** with strict type checking for all Python code.
 
 ### Alternatives Considered
 
-| Tool | Why Rejected |
-|------|--------------|
-| pyright | Excellent but less mature plugin ecosystem for our stack |
-| pyre | Facebook's tool, less community adoption, enterprise-focused |
-| pytype | Google's tool, slower, different type inference approach |
+| Tool    | Why Rejected                                                 |
+| ------- | ------------------------------------------------------------ |
+| pyright | Excellent but less mature plugin ecosystem for our stack     |
+| pyre    | Facebook's tool, less community adoption, enterprise-focused |
+| pytype  | Google's tool, slower, different type inference approach     |
 
 ### Configuration
 
@@ -113,6 +113,7 @@ disallow_untyped_defs = false  # Allow untyped test functions
 ### Decision
 
 Use **three-layered security approach**:
+
 1. **Bandit** for static code security analysis (Python)
 2. **Safety** for dependency vulnerability scanning (Python)
 3. **GitHub CodeQL** for comprehensive repository-wide analysis
@@ -235,16 +236,19 @@ Use **two-tier matrix strategy** with different coverage for feature branches vs
 Based on [GitHub's official documentation](https://docs.github.com/en/actions/reference/runners/github-hosted-runners):
 
 **Ubuntu Runners:**
+
 - `ubuntu-latest` (currently ubuntu-24.04)
 - `ubuntu-24.04` (Noble Numbat LTS)
 - `ubuntu-22.04` (Jammy Jellyfish LTS)
 
 **Windows Runners:**
+
 - `windows-latest` (currently windows-2025)
 - `windows-2025` (Windows Server 2025 - newest)
 - `windows-2022` (Windows Server 2022)
 
 **macOS Runners:**
+
 - `macos-latest` (currently macos-15, Apple Silicon/ARM64)
 - `macos-15` (Sequoia, Apple Silicon)
 - `macos-14` (Sonoma, Apple Silicon)
@@ -259,12 +263,12 @@ Based on [GitHub's official documentation](https://docs.github.com/en/actions/re
 strategy:
   matrix:
     os: [ubuntu-latest, windows-latest, macos-latest]
-    python-version: ['3.12']
-    node-version: ['20.x']
+    python-version: ["3.12"]
+    node-version: ["20.x"]
   fail-fast: false
 ```
 
-**Jobs**: 3 (one per OS family, Python 3.12 only)  
+**Jobs**: 3 (one per OS family, Python 3.12 only)
 **Expected Time**: ~3-5 minutes with caching
 
 ### Matrix Configuration: Workflow B (PR to Main)
@@ -274,22 +278,23 @@ strategy:
 ```yaml
 strategy:
   matrix:
-    os: 
-      - ubuntu-latest    # ubuntu-24.04 (current LTS)
-      - ubuntu-22.04     # Previous LTS
-      - windows-latest   # windows-2025 (newest)
-      - windows-2022     # Previous stable
-      - macos-latest     # macos-15 (Apple Silicon, current)
-      - macos-14         # Apple Silicon, previous
-    python-version: ['3.12', '3.13']
-    node-version: ['20.x']
+    os:
+      - ubuntu-latest # ubuntu-24.04 (current LTS)
+      - ubuntu-22.04 # Previous LTS
+      - windows-latest # windows-2025 (newest)
+      - windows-2022 # Previous stable
+      - macos-latest # macos-15 (Apple Silicon, current)
+      - macos-14 # Apple Silicon, previous
+    python-version: ["3.12", "3.13"]
+    node-version: ["20.x"]
   fail-fast: false
 ```
 
-**Jobs**: 12 (6 OS × 2 Python versions × 1 Node version)  
+**Jobs**: 12 (6 OS × 2 Python versions × 1 Node version)
 **Expected Time**: ~10-15 minutes with caching (jobs run in parallel)
 
 **Rationale for OS Selection**:
+
 - **Ubuntu**: Latest (24.04) + Previous LTS (22.04) covers most Linux users
 - **Windows**: Latest (2025) + Previous (2022) covers modern Windows servers
 - **macOS**: Latest (15) + Previous (14) both on Apple Silicon (future of Mac)
@@ -312,18 +317,21 @@ strategy:
 ### Performance Expectations
 
 **Workflow A (Feature Branch - Fast Feedback):**
+
 - **Without Cache**: 8-10 minutes per job
 - **With Cache**: 3-5 minutes per job
 - **Parallel Execution**: All 3 jobs run simultaneously
 - **Wall-Clock Time**: ~3-5 minutes
 
 **Workflow B (PR to Main - Comprehensive):**
+
 - **Without Cache**: 10-15 minutes per job
 - **With Cache**: 8-12 minutes per job
 - **Parallel Execution**: All 12 jobs run simultaneously
 - **Wall-Clock Time**: ~10-15 minutes (limited by slowest job)
 
 **CI Minutes Consumption per PR**:
+
 - Feature branch push: ~15 minutes (3 jobs × 5 min)
 - PR to main: ~120 minutes (12 jobs × 10 min avg, but 4 macOS jobs count as 10x = ~400 equivalent minutes)
 
@@ -410,10 +418,10 @@ Use **Commitizen** for Conventional Commits enforcement and interactive commit c
 
 ### Alternatives Considered
 
-| Tool | Why Rejected |
-|------|--------------|
-| commitlint | JavaScript-based, requires Node.js for Python-only workflows |
-| Manual validation | Error-prone, requires custom scripts |
+| Tool              | Why Rejected                                                 |
+| ----------------- | ------------------------------------------------------------ |
+| commitlint        | JavaScript-based, requires Node.js for Python-only workflows |
+| Manual validation | Error-prone, requires custom scripts                         |
 
 ### Configuration
 
@@ -535,34 +543,34 @@ Branch: main
     Required approvals: 1
     Dismiss stale reviews: true
     Require review from Code Owners: false (single developer project)
-  
+
   Require status checks to pass:
     # Ubuntu - 2 OS × 2 Python = 4 jobs
     - CI / test (ubuntu-latest, 3.12)
     - CI / test (ubuntu-latest, 3.13)
     - CI / test (ubuntu-22.04, 3.12)
     - CI / test (ubuntu-22.04, 3.13)
-    
+
     # Windows - 2 OS × 2 Python = 4 jobs
     - CI / test (windows-latest, 3.12)
     - CI / test (windows-latest, 3.13)
     - CI / test (windows-2022, 3.12)
     - CI / test (windows-2022, 3.13)
-    
+
     # macOS - 2 OS × 2 Python = 4 jobs
     - CI / test (macos-latest, 3.12)
     - CI / test (macos-latest, 3.13)
     - CI / test (macos-14, 3.12)
     - CI / test (macos-14, 3.13)
-    
+
     # Quality & Security checks
     - CI / lint
     - CI / security-scan
     - CodeQL
-  
+
   Require branches to be up to date: true
   Require linear history: false (allow merge commits)
-  
+
   Do not allow bypassing: true (even admins must follow rules)
   Allow force pushes: false
   Allow deletions: false
@@ -593,17 +601,17 @@ Three distinct workflows with different triggers and scopes:
 
 ### Workflow Scope Comparison
 
-| Check | Workflow A (Feature) | Workflow B (PR to Main) | Workflow C (Post-Merge) |
-|-------|---------------------|------------------------|-------------------------|
-| **OS Coverage** | Latest only (3 OS) | Latest + Previous (6 OS) | ❌ Skip |
-| **Python Versions** | 3.12 only | 3.12 + 3.13 | ❌ Skip |
-| **Total Jobs** | 3 jobs | 12 jobs | N/A |
-| Linting | ✅ Quick validation | ✅ Full validation | ❌ Skip (already validated) |
-| Type Check | ✅ Quick validation | ✅ Full validation | ❌ Skip |
-| Tests | ✅ Basic (3 platforms) | ✅ Comprehensive (6 OS × 2 Python) | ❌ Skip |
-| Security Scan | ❌ Skip | ✅ Full (bandit, safety, CodeQL) | ❌ Skip |
-| Coverage Check | ❌ Skip | ✅ Required 80%+ | ❌ Skip |
-| Release/Tag | ❌ Skip | ❌ Skip | ✅ Optional |
+| Check               | Workflow A (Feature)   | Workflow B (PR to Main)            | Workflow C (Post-Merge)     |
+| ------------------- | ---------------------- | ---------------------------------- | --------------------------- |
+| **OS Coverage**     | Latest only (3 OS)     | Latest + Previous (6 OS)           | ❌ Skip                     |
+| **Python Versions** | 3.12 only              | 3.12 + 3.13                        | ❌ Skip                     |
+| **Total Jobs**      | 3 jobs                 | 12 jobs                            | N/A                         |
+| Linting             | ✅ Quick validation    | ✅ Full validation                 | ❌ Skip (already validated) |
+| Type Check          | ✅ Quick validation    | ✅ Full validation                 | ❌ Skip                     |
+| Tests               | ✅ Basic (3 platforms) | ✅ Comprehensive (6 OS × 2 Python) | ❌ Skip                     |
+| Security Scan       | ❌ Skip                | ✅ Full (bandit, safety, CodeQL)   | ❌ Skip                     |
+| Coverage Check      | ❌ Skip                | ✅ Required 80%+                   | ❌ Skip                     |
+| Release/Tag         | ❌ Skip                | ❌ Skip                            | ✅ Optional                 |
 
 ### Expected Performance
 
@@ -638,7 +646,7 @@ Require **minimum 80% test coverage** with coverage reports uploaded to artifact
 - name: Run Tests with Coverage
   run: |
     uv run pytest --cov=src --cov-report=xml --cov-report=html --cov-report=term
-    
+
 - name: Check Coverage Threshold
   run: |
     uv run coverage report --fail-under=80
@@ -679,19 +687,19 @@ precision = 2
 
 ## Summary of Key Decisions
 
-| Decision Area | Choice | Primary Rationale |
-|---------------|--------|-------------------|
-| Python Linter/Formatter | **ruff** | All-in-one, 10-100x faster, auto-fix |
-| Type Checking | **mypy** (strict) | Industry standard, constitution mandate |
-| Security Scanning | **Bandit + Safety + CodeQL** | Multi-layered defense, risk-based policy |
-| Frontend Linting | **ESLint + Prettier** | Industry standard, separation of concerns |
-| Matrix Strategy | **Two-tier: 3 jobs (feature) / 12 jobs (PR)** | Fast feedback + comprehensive validation |
-| Pre-commit Framework | **pre-commit** | Language-agnostic, standardized, fast |
-| Commit Standards | **Commitizen** | Interactive, Python-native, constitution mandate |
-| Task Runner | **just** | Already adopted, cross-platform, simple |
-| Branch Protection | **Strict rules on main** | Constitution compliance, quality gate |
-| Workflow Strategy | **3 workflows (A/B/C)** | Fast feedback vs comprehensive validation |
-| Coverage Threshold | **80% minimum** | Constitution alignment, quality assurance |
+| Decision Area           | Choice                                        | Primary Rationale                                |
+| ----------------------- | --------------------------------------------- | ------------------------------------------------ |
+| Python Linter/Formatter | **ruff**                                      | All-in-one, 10-100x faster, auto-fix             |
+| Type Checking           | **mypy** (strict)                             | Industry standard, constitution mandate          |
+| Security Scanning       | **Bandit + Safety + CodeQL**                  | Multi-layered defense, risk-based policy         |
+| Frontend Linting        | **ESLint + Prettier**                         | Industry standard, separation of concerns        |
+| Matrix Strategy         | **Two-tier: 3 jobs (feature) / 12 jobs (PR)** | Fast feedback + comprehensive validation         |
+| Pre-commit Framework    | **pre-commit**                                | Language-agnostic, standardized, fast            |
+| Commit Standards        | **Commitizen**                                | Interactive, Python-native, constitution mandate |
+| Task Runner             | **just**                                      | Already adopted, cross-platform, simple          |
+| Branch Protection       | **Strict rules on main**                      | Constitution compliance, quality gate            |
+| Workflow Strategy       | **3 workflows (A/B/C)**                       | Fast feedback vs comprehensive validation        |
+| Coverage Threshold      | **80% minimum**                               | Constitution alignment, quality assurance        |
 
 ---
 
@@ -701,7 +709,6 @@ All research complete. No open questions remain.
 
 ---
 
-**Research Status**: ✅ COMPLETE  
-**Ready for Phase 1**: YES  
+**Research Status**: ✅ COMPLETE
+**Ready for Phase 1**: YES
 **Next Step**: Generate data-model.md, contracts/, and quickstart.md
-

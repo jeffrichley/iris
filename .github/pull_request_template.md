@@ -24,9 +24,9 @@
 
 <!-- List the specific changes made in this PR -->
 
-- 
-- 
-- 
+-
+-
+-
 
 ## Testing
 
@@ -86,15 +86,18 @@
 
 All CI checks must pass before merge:
 
-**Matrix Tests**: 
+**Matrix Tests**:
+
 - [ ] All 12 matrix jobs passing (6 OS × 2 Python)
 
 **Security**:
+
 - [ ] Security scan passing
 - [ ] CodeQL analysis passing
 - [ ] No HIGH/CRITICAL vulnerabilities
 
 **Coverage**:
+
 - [ ] Code coverage >= 80%
 - [ ] Coverage report uploaded to Codecov
 
@@ -112,15 +115,16 @@ All CI checks must pass before merge:
 
 ---
 
-**PR Author Checklist**: 
+**PR Author Checklist**:
+
 - Read the checklist above
 - Mark applicable items
 - Wait for CI to pass
 - Request review when ready
 
 **Reviewer Checklist**:
+
 - Verify all checklist items marked
 - Check CI passing
 - Review code quality
 - Approve or request changes
-

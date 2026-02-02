@@ -24,7 +24,7 @@ Branch name pattern: main
 
 ☑ Require status checks to pass before merging
   ☑ Require branches to be up to date before merging
-  
+
   Required status checks (15 total):
     # Matrix Test Jobs (12 checks - 6 OS × 2 Python)
     ✓ comprehensive-validation (ubuntu-latest, 3.12)
@@ -39,7 +39,7 @@ Branch name pattern: main
     ✓ comprehensive-validation (macos-latest, 3.13)
     ✓ comprehensive-validation (macos-14, 3.12)
     ✓ comprehensive-validation (macos-14, 3.13)
-    
+
     # Security and Quality (3 checks)
     ✓ security-scan
     ✓ CodeQL Analysis (python)
@@ -85,7 +85,7 @@ gh api repos/jeffrichley/iris/branches/main/protection \
 resource "github_branch_protection" "main" {
   repository_id = "iris"
   pattern       = "main"
-  
+
   required_status_checks {
     strict = true
     contexts = [
@@ -94,12 +94,12 @@ resource "github_branch_protection" "main" {
       # ... all 15 checks
     ]
   }
-  
+
   required_pull_request_reviews {
     required_approving_review_count = 1
     dismiss_stale_reviews           = true
   }
-  
+
   enforce_admins = true
 }
 ```
@@ -109,6 +109,7 @@ resource "github_branch_protection" "main" {
 After applying configuration:
 
 1. **Test Protection**: Try pushing directly to `main`
+
    ```bash
    git checkout main
    git commit --allow-empty -m "test: verify protection"
@@ -117,6 +118,7 @@ After applying configuration:
    ```
 
 2. **Test PR Flow**: Create test PR
+
    ```bash
    git checkout -b test/branch-protection
    git commit --allow-empty -m "test: verify PR flow"
@@ -125,30 +127,30 @@ After applying configuration:
    # Verify merge is blocked until all 15 checks pass
    ```
 
-3. **Verify Status Checks**: 
+3. **Verify Status Checks**:
    - Open PR
    - Check that all 15 required checks appear
    - Verify merge button is disabled until checks pass
 
 ## Status Check Names Reference
 
-| Check Name | Workflow | Job | Matrix |
-|------------|----------|-----|--------|
-| `comprehensive-validation (ubuntu-latest, 3.12)` | ci-pr-main.yml | comprehensive-validation | ubuntu-latest, Python 3.12 |
-| `comprehensive-validation (ubuntu-latest, 3.13)` | ci-pr-main.yml | comprehensive-validation | ubuntu-latest, Python 3.13 |
-| `comprehensive-validation (ubuntu-22.04, 3.12)` | ci-pr-main.yml | comprehensive-validation | ubuntu-22.04, Python 3.12 |
-| `comprehensive-validation (ubuntu-22.04, 3.13)` | ci-pr-main.yml | comprehensive-validation | ubuntu-22.04, Python 3.13 |
+| Check Name                                        | Workflow       | Job                      | Matrix                      |
+| ------------------------------------------------- | -------------- | ------------------------ | --------------------------- |
+| `comprehensive-validation (ubuntu-latest, 3.12)`  | ci-pr-main.yml | comprehensive-validation | ubuntu-latest, Python 3.12  |
+| `comprehensive-validation (ubuntu-latest, 3.13)`  | ci-pr-main.yml | comprehensive-validation | ubuntu-latest, Python 3.13  |
+| `comprehensive-validation (ubuntu-22.04, 3.12)`   | ci-pr-main.yml | comprehensive-validation | ubuntu-22.04, Python 3.12   |
+| `comprehensive-validation (ubuntu-22.04, 3.13)`   | ci-pr-main.yml | comprehensive-validation | ubuntu-22.04, Python 3.13   |
 | `comprehensive-validation (windows-latest, 3.12)` | ci-pr-main.yml | comprehensive-validation | windows-latest, Python 3.12 |
 | `comprehensive-validation (windows-latest, 3.13)` | ci-pr-main.yml | comprehensive-validation | windows-latest, Python 3.13 |
-| `comprehensive-validation (windows-2022, 3.12)` | ci-pr-main.yml | comprehensive-validation | windows-2022, Python 3.12 |
-| `comprehensive-validation (windows-2022, 3.13)` | ci-pr-main.yml | comprehensive-validation | windows-2022, Python 3.13 |
-| `comprehensive-validation (macos-latest, 3.12)` | ci-pr-main.yml | comprehensive-validation | macos-latest, Python 3.12 |
-| `comprehensive-validation (macos-latest, 3.13)` | ci-pr-main.yml | comprehensive-validation | macos-latest, Python 3.13 |
-| `comprehensive-validation (macos-14, 3.12)` | ci-pr-main.yml | comprehensive-validation | macos-14, Python 3.12 |
-| `comprehensive-validation (macos-14, 3.13)` | ci-pr-main.yml | comprehensive-validation | macos-14, Python 3.13 |
-| `security-scan` | ci-pr-main.yml | security-scan | single job |
-| `CodeQL Analysis (python)` | codeql.yml | analyze | Python |
-| `CodeQL Analysis (javascript)` | codeql.yml | analyze | JavaScript |
+| `comprehensive-validation (windows-2022, 3.12)`   | ci-pr-main.yml | comprehensive-validation | windows-2022, Python 3.12   |
+| `comprehensive-validation (windows-2022, 3.13)`   | ci-pr-main.yml | comprehensive-validation | windows-2022, Python 3.13   |
+| `comprehensive-validation (macos-latest, 3.12)`   | ci-pr-main.yml | comprehensive-validation | macos-latest, Python 3.12   |
+| `comprehensive-validation (macos-latest, 3.13)`   | ci-pr-main.yml | comprehensive-validation | macos-latest, Python 3.13   |
+| `comprehensive-validation (macos-14, 3.12)`       | ci-pr-main.yml | comprehensive-validation | macos-14, Python 3.12       |
+| `comprehensive-validation (macos-14, 3.13)`       | ci-pr-main.yml | comprehensive-validation | macos-14, Python 3.13       |
+| `security-scan`                                   | ci-pr-main.yml | security-scan            | single job                  |
+| `CodeQL Analysis (python)`                        | codeql.yml     | analyze                  | Python                      |
+| `CodeQL Analysis (javascript)`                    | codeql.yml     | analyze                  | JavaScript                  |
 
 ## Important Notes
 
@@ -161,7 +163,8 @@ After applying configuration:
 
 **Problem**: Status checks not appearing
 
-**Solution**: 
+**Solution**:
+
 - Push a commit to trigger workflows first
 - GitHub learns available checks from workflow runs
 - Then configure branch protection
@@ -169,6 +172,7 @@ After applying configuration:
 **Problem**: Too many required checks
 
 **Solution**:
+
 - This is intentional - ensures comprehensive validation
 - All 12 matrix jobs must pass
 - All 3 security checks must pass
@@ -176,12 +180,12 @@ After applying configuration:
 **Problem**: Can't merge even with passing checks
 
 **Solution**:
+
 - Verify all 15 checks are green
 - Verify code review approval received
 - Check for conversation threads requiring resolution
 
 ---
 
-**Last Updated**: October 20, 2025  
+**Last Updated**: October 20, 2025
 **Maintained By**: Iris Development Team
-

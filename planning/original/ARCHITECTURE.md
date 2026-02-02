@@ -89,9 +89,9 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 
 ### Relationships
 
-* One project → many tasks, notes, and reminders.
-* Ideas may be converted to projects.
-* Tasks optionally link to reminders.
+- One project → many tasks, notes, and reminders.
+- Ideas may be converted to projects.
+- Tasks optionally link to reminders.
 
 ---
 
@@ -113,10 +113,10 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 
 ## 7. Reminders & Daily Briefing Engine
 
-* Runs as a background task in FastAPI.
-* Scans tasks/reminders due in next 24 hours.
-* Sends desktop notifications and/or generates a summary view.
-* Future phases may connect this to voice or email output.
+- Runs as a background task in FastAPI.
+- Scans tasks/reminders due in next 24 hours.
+- Sends desktop notifications and/or generates a summary view.
+- Future phases may connect this to voice or email output.
 
 ---
 
@@ -147,10 +147,10 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 
 ## 10. Security & Privacy
 
-* Local data stored in SQLite within user profile directory.
-* Supabase communication secured with SSL.
-* Authentication optional for personal use; OAuth planned for public releases.
-* Sensitive logs excluded from Sentry reporting.
+- Local data stored in SQLite within user profile directory.
+- Supabase communication secured with SSL.
+- Authentication optional for personal use; OAuth planned for public releases.
+- Sensitive logs excluded from Sentry reporting.
 
 ---
 
@@ -167,6 +167,5 @@ The MVP architecture is designed for **local-first operation** with seamless **c
 ## 12. Summary
 
 The Phase 1 architecture delivers a solid foundation for structured project management while remaining flexible for future intelligent features. It prioritizes **data reliability**, **offline usability**, and **developer efficiency**, ensuring Iris can evolve into a fully autonomous personal assistant in later phases.
-
 
 Project Layout

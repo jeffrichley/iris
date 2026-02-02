@@ -37,13 +37,15 @@ Here's the typical flow for creating a feature:
 
 **Scope**: **ENTIRE PROJECT** (run once, update rarely)
 
-**When to run**: 
+**When to run**:
+
 - At project start
 - When major architectural principles change
 
 **Output**: `.specify/memory/constitution.md`
 
 **Key Features**:
+
 - Defines principles (e.g., "Library-First", "Test-First", "CLI Interface")
 - Sets governance rules
 - Version-controlled constraints that all features must follow
@@ -60,11 +62,13 @@ Here's the typical flow for creating a feature:
 
 **Input**: Plain English description (e.g., "I want to add user authentication")
 
-**Output**: 
+**Output**:
+
 - `specs/###-feature-name/spec.md` (requirements, user stories, success criteria)
 - `specs/###-feature-name/checklists/requirements.md` (quality validation)
 
 **What it does**:
+
 1. Creates a feature branch
 2. Generates user stories **with priorities (P1, P2, P3)**
 3. Defines functional requirements
@@ -73,6 +77,7 @@ Here's the typical flow for creating a feature:
 6. Asks up to 3 clarifying questions if needed
 
 **Key Features**:
+
 - **BUSINESS-FOCUSED** (no technical details)
 - Written for stakeholders, not developers
 - User stories are **independently testable** (each can be an MVP)
@@ -89,12 +94,14 @@ Here's the typical flow for creating a feature:
 **When to run**: After `/specify`, before `/plan` (if you want extra validation)
 
 **What it does**:
+
 1. Scans spec for ambiguities (vague terms like "fast", "scalable")
 2. Asks up to 5 targeted questions (one at a time)
 3. **Provides recommendations** for each question
 4. Updates spec with clarifications incrementally
 
 **Key Features**:
+
 - Interactive questioning (one question at a time)
 - AI recommends best answers based on best practices
 - You can accept recommendations or provide custom answers
@@ -108,12 +115,14 @@ Here's the typical flow for creating a feature:
 
 **Scope**: **PER FEATURE** (optional, run as needed)
 
-**When to run**: 
+**When to run**:
+
 - After spec is written
 - Before implementation
 - For specific validation needs (UX, API, security, performance)
 
 **Types of checklists**:
+
 - `ux.md` - User experience requirements quality
 - `api.md` - API requirements quality
 - `security.md` - Security requirements quality
@@ -122,6 +131,7 @@ Here's the typical flow for creating a feature:
 **CRITICAL CONCEPT**: These are **"Unit Tests for English"** - they validate if your requirements are well-written, NOT if the implementation works.
 
 **Example items**:
+
 - ✅ "Are hover state requirements consistently defined for all interactive elements?"
 - ✅ "Is 'prominent display' quantified with specific sizing/positioning?"
 - ❌ NOT "Verify the button clicks correctly" (that's implementation testing)
@@ -137,6 +147,7 @@ Here's the typical flow for creating a feature:
 **When to run**: After spec is clarified and validated
 
 **What it does**:
+
 1. Fills in technical context (language, dependencies, stack)
 2. **Phase 0**: Generates `research.md` (resolves unknowns)
 3. **Phase 1**: Generates `data-model.md`, `contracts/`, `quickstart.md`
@@ -144,6 +155,7 @@ Here's the typical flow for creating a feature:
 5. Updates agent context
 
 **Output**:
+
 - `plan.md` - Technical approach
 - `research.md` - Technical decisions and rationale
 - `data-model.md` - Entities and relationships
@@ -161,18 +173,21 @@ Here's the typical flow for creating a feature:
 **When to run**: After `/plan` completes
 
 **What it does**:
+
 1. Reads spec (user stories with priorities), plan, data-model, contracts
 2. Generates tasks **organized by user story**
 3. Each user story becomes an independent, testable increment
 4. Shows dependencies and parallel opportunities
 
 **Output**: `tasks.md` with:
+
 - **Phase 1**: Setup (shared infrastructure)
 - **Phase 2**: Foundational (blocking prerequisites)
 - **Phase 3+**: One phase per user story (P1, P2, P3)
 - **Final Phase**: Polish & cross-cutting
 
 **Key Features**:
+
 - Tasks formatted as checklists: `- [ ] T001 [P?] [US1?] Description with file path`
 - `[P]` = parallelizable
 - `[US1]` = belongs to User Story 1
@@ -189,6 +204,7 @@ Here's the typical flow for creating a feature:
 **When to run**: After `/tasks`, before `/implement`
 
 **What it does**:
+
 1. Detects duplication, ambiguity, coverage gaps
 2. Checks constitution compliance
 3. Maps requirements to tasks
@@ -196,6 +212,7 @@ Here's the typical flow for creating a feature:
 5. **READ-ONLY** (doesn't modify files)
 
 **Output**: Analysis report with:
+
 - Findings table (severity: CRITICAL, HIGH, MEDIUM, LOW)
 - Coverage summary
 - Constitution violations
@@ -212,6 +229,7 @@ Here's the typical flow for creating a feature:
 **When to run**: After tasks are generated and validated
 
 **What it does**:
+
 1. Checks checklist completion (warns if incomplete)
 2. Loads all design docs
 3. Sets up ignore files (`.gitignore`, `.dockerignore`, etc.)
@@ -220,6 +238,7 @@ Here's the typical flow for creating a feature:
 6. Marks off completed tasks in `tasks.md`
 
 **Execution flow**:
+
 - Phase 1: Setup
 - Phase 2: Foundational (BLOCKS everything else)
 - Phase 3+: User stories (can run in parallel)
@@ -243,11 +262,13 @@ Each **feature** gets its own spec in `specs/###-feature-name/` and is self-cont
 This system **SUPPORTS YOUR PREFERENCE** perfectly! Here's how:
 
 **Each feature spec contains user stories with priorities (P1, P2, P3)**:
+
 - **P1 (User Story 1)** = Your MVP / First sprint
 - **P2 (User Story 2)** = Second sprint
 - **P3 (User Story 3)** = Third sprint
 
 **You can implement incrementally**:
+
 1. Run `/specify` once for the feature
 2. Run `/plan` once to get technical design
 3. Run `/tasks` to get ALL tasks (but organized by user story)
@@ -263,6 +284,7 @@ This system **SUPPORTS YOUR PREFERENCE** perfectly! Here's how:
 To keep planning **small and focused**:
 
 ✅ **Do this**:
+
 - Run `/specify` for ONE small feature at a time
 - User stories should be **independently testable** (2-4 hours of work each)
 - Skip `/clarify` if spec is clear enough
@@ -270,6 +292,7 @@ To keep planning **small and focused**:
 - Start with just **User Story 1 (P1)** for implementation
 
 ❌ **Avoid this**:
+
 - Don't create a spec for "entire authentication system" - break it down:
   - Feature 1: Basic login
   - Feature 2: Password reset
@@ -281,6 +304,7 @@ To keep planning **small and focused**:
 ## 📊 **Recommended Workflow for Small Increments**
 
 ### **Minimal Path** (Fastest)
+
 ```bash
 /speckit.specify "Add basic user login"
 # → Creates spec with 1-3 user stories
@@ -293,6 +317,7 @@ To keep planning **small and focused**:
 ```
 
 ### **Quality-Focused Path** (Recommended)
+
 ```bash
 /speckit.specify "Add basic user login"
 /speckit.clarify     # Optional: refine ambiguities
@@ -307,7 +332,7 @@ To keep planning **small and focused**:
 
 ## 🎨 **Key Takeaway**
 
-This system is designed for **feature-level, incremental planning**! 
+This system is designed for **feature-level, incremental planning**!
 
 - Each feature = 1-3 user stories
 - Each user story = independently testable increment

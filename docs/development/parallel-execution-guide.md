@@ -77,6 +77,7 @@ Task T013: tsconfig.json
 ```
 
 **Cannot run in parallel** (same file):
+
 - T006-T010 all edit pyproject.toml → must be sequential OR coordinated merge
 - T014-T018 all edit justfile → must be sequential
 
@@ -148,6 +149,7 @@ Developer D: T089 (PR checklist)
 ### Running Multiple Quality Checks
 
 **Sequential** (traditional):
+
 ```bash
 just lint       # 30 seconds
 just type-check # 45 seconds
@@ -156,6 +158,7 @@ just test       # 2 minutes
 ```
 
 **Parallel** (faster):
+
 ```bash
 # Run all in background
 just lint & just type-check & just test &
@@ -164,6 +167,7 @@ wait
 ```
 
 **Using just ci** (automated):
+
 ```bash
 just ci  # Runs sequentially but optimized
 ```
@@ -239,8 +243,8 @@ GitHub Actions runs jobs in parallel up to concurrency limits:
 
 ### Our Workflows
 
-**Workflow A**: 3 jobs → All run in parallel simultaneously  
-**Workflow B**: 13 jobs → All run in parallel (within limits)  
+**Workflow A**: 3 jobs → All run in parallel simultaneously
+**Workflow B**: 13 jobs → All run in parallel (within limits)
 **CodeQL**: 2 jobs (Python, JS) → Run in parallel
 
 **Optimization**: No need for manual job orchestration; GitHub handles it automatically
@@ -252,6 +256,7 @@ GitHub Actions runs jobs in parallel up to concurrency limits:
 **Problem**: Multiple tasks edit pyproject.toml (T006-T010)
 
 **Solutions**:
+
 - **Sequential**: Complete T006-T010 in order
 - **Coordinated**: Use git branches, merge carefully
 - **Single session**: One developer does all pyproject.toml edits
@@ -261,6 +266,7 @@ GitHub Actions runs jobs in parallel up to concurrency limits:
 **Problem**: macOS jobs count as 10× CI minutes
 
 **Solutions**:
+
 - **Accepted**: macOS testing is valuable for cross-platform app
 - **Future optimization**: Drop macos-14 if budget tight (keep latest only)
 - **Cost-benefit**: 4 macOS jobs × 10× = worth it for reliability
@@ -270,6 +276,7 @@ GitHub Actions runs jobs in parallel up to concurrency limits:
 **Problem**: Phase 2 (T006-T018) blocks ALL user stories
 
 **Solutions**:
+
 - **Prioritize**: Complete Phase 2 first (2 hours)
 - **Team effort**: All developers help with foundational tasks
 - **Cannot avoid**: Foundation must be solid before building user stories
@@ -278,17 +285,17 @@ GitHub Actions runs jobs in parallel up to concurrency limits:
 
 ### DO
 
-✅ Run lint, format, type-check in parallel during development  
-✅ Let GitHub Actions handle job parallelization automatically  
-✅ Use pre-commit hooks (they parallelize automatically)  
-✅ Assign different user stories to different developers  
+✅ Run lint, format, type-check in parallel during development
+✅ Let GitHub Actions handle job parallelization automatically
+✅ Use pre-commit hooks (they parallelize automatically)
+✅ Assign different user stories to different developers
 ✅ Create configuration files in parallel if different files
 
 ### DON'T
 
-❌ Edit same file from multiple branches without coordination  
-❌ Skip pre-commit hooks to "save time" (creates more work later)  
-❌ Try to manually control GitHub Actions job order  
+❌ Edit same file from multiple branches without coordination
+❌ Skip pre-commit hooks to "save time" (creates more work later)
+❌ Try to manually control GitHub Actions job order
 ❌ Start user story work before Foundational phase completes
 
 ## Monitoring Parallel Execution
@@ -296,6 +303,7 @@ GitHub Actions runs jobs in parallel up to concurrency limits:
 ### GitHub Actions UI
 
 View job parallelization:
+
 1. Go to Actions tab
 2. Click on workflow run
 3. See all jobs running simultaneously
@@ -313,6 +321,5 @@ pre-commit run --all-files --verbose
 
 ---
 
-**Last Updated**: October 20, 2025  
+**Last Updated**: October 20, 2025
 **Maintained By**: Iris Development Team
-

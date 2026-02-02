@@ -1,11 +1,11 @@
 # Feature Specification: CI & Pre-commit Strategy
 
-**Feature Branch**: `001-ci-precommit-setup`  
-**Created**: October 20, 2025  
-**Status**: Draft  
+**Feature Branch**: `001-ci-precommit-setup`
+**Created**: October 20, 2025
+**Status**: Draft
 **Input**: User description: "@CI_PRE_COMMIT.md"
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Fast Feedback on Feature Branches (Priority: P1)
 
@@ -91,7 +91,7 @@ All commits in the repository follow Conventional Commits format, making it easy
 - What happens when test coverage drops below 80% threshold?
   - CI fails and blocks merge until coverage is restored
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -173,7 +173,7 @@ All commits in the repository follow Conventional Commits format, making it easy
 - **Branch Protection Rule**: GitHub configuration that enforces quality gates on main branch, including required status checks, code review approvals, and blocking direct commits
 - **Quality Tool Configuration**: Settings files for linting (ruff, eslint), type checking (mypy, tsc), formatting (prettier), security scanning (bandit, npm audit, CodeQL), and commit standards (commitizen)
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

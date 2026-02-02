@@ -1,6 +1,6 @@
 # Tasks: CI & Pre-commit Strategy
 
-**Input**: Design documents from `/specs/001-ci-precommit-setup/`  
+**Input**: Design documents from `/specs/001-ci-precommit-setup/`
 **Prerequisites**: plan.md, spec.md, research.md, quickstart.md
 
 **Tests**: No test tasks included - this is infrastructure/configuration feature
@@ -8,11 +8,13 @@
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each workflow.
 
 ## Format: `[ID] [P?] [Story] Description`
+
 - **[P]**: Can run in parallel (different files, no dependencies)
 - **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3, US4)
 - Include exact file paths in descriptions
 
 ## Path Conventions
+
 - Configuration files at repository root
 - GitHub Actions workflows in `.github/workflows/`
 - Tool configurations in root or `pyproject.toml`
@@ -262,6 +264,7 @@ Phase 8: Polish
 ### Parallel Opportunities
 
 **Foundational Phase (after setup)**:
+
 ```bash
 # All tool configurations can run in parallel:
 Task T006: ruff configuration
@@ -275,6 +278,7 @@ Task T013: tsconfig strict mode
 ```
 
 **User Story 3 (Pre-commit Hooks)**:
+
 ```bash
 # All hook configurations can run in parallel:
 Task T019: ruff hooks
@@ -284,6 +288,7 @@ Task T022: prettier hook
 ```
 
 **User Story 4 (Commit Messages)**:
+
 ```bash
 # Configuration tasks parallel:
 Task T027: .cz.toml creation
@@ -292,6 +297,7 @@ Task T029: bump patterns
 ```
 
 **Documentation (Phase 8)**:
+
 ```bash
 # All documentation tasks can run in parallel:
 Task T079: ci-setup.md
@@ -302,6 +308,7 @@ Task T087: examples
 ```
 
 **If Multiple Developers Available**:
+
 - Developer A: User Story 3 (Pre-commit) + User Story 4 (Commit messages)
 - Developer B: User Story 1 (Feature CI) + User Story 2 (PR CI)
 - Both can work in parallel after Foundational phase completes
@@ -338,8 +345,9 @@ Task T046: Test step              # Different workflow job
    - **STOP and VALIDATE**: Install hooks, make commits, verify they work
 4. **Phase 5**: User Story 1 (T035-T049) - ~2-3 hours
    - **STOP and VALIDATE**: Push to feature branch, verify CI runs and passes
-   
-**At this point you have**: 
+
+**At this point you have**:
+
 - ✅ Local pre-commit hooks (immediate feedback)
 - ✅ Feature branch CI (cloud validation)
 - ✅ Basic quality gates working
@@ -360,22 +368,26 @@ Task T046: Test step              # Different workflow job
 ### Incremental Delivery Checkpoints
 
 **Checkpoint 1** (After Phase 3): Local quality gates working
+
 - Pre-commit hooks installed and functional
 - Developers get immediate feedback
 - Can commit this and use it immediately
 
 **Checkpoint 2** (After Phase 5): Basic CI pipeline working
+
 - Feature branches validate automatically
 - Fast feedback from cloud CI
 - Ready for team collaboration
 
 **Checkpoint 3** (After Phase 6): Production-ready CI
+
 - Main branch protected
 - Comprehensive validation before merge
 - Security scanning active
 - Ready for production use
 
 **Checkpoint 4** (After Phase 8): Fully polished
+
 - Complete documentation
 - All automation in place
 - Team onboarding materials ready
@@ -385,6 +397,7 @@ Task T046: Test step              # Different workflow job
 ## Validation Criteria
 
 ### User Story 3 (Local Pre-commit)
+
 - [x] Pre-commit hooks can be installed with `pre-commit install` (configured in .pre-commit-config.yaml)
 - [x] Hooks auto-format code on commit (ruff, prettier configured)
 - [x] Hooks block commits with type errors (mypy configured)
@@ -392,6 +405,7 @@ Task T046: Test step              # Different workflow job
 - [x] All hooks run in under 10 seconds (pre-commit framework optimized)
 
 ### User Story 1 (Feature Branch CI)
+
 - [x] Workflow triggers on push to non-main branches (configured: branches-ignore: main)
 - [x] Workflow completes in under 5 minutes (caching optimized for 3-5 min target)
 - [x] Linting errors are clearly reported (ruff check step in workflow)
@@ -400,6 +414,7 @@ Task T046: Test step              # Different workflow job
 - [x] GitHub UI shows clear status (workflow badge in README)
 
 ### User Story 2 (PR to Main CI)
+
 - [x] Workflow triggers only on PR to main (configured: pull_request: branches: [main])
 - [x] All 12 matrix jobs run (6 OS × 2 Python) (matrix configured in ci-pr-main.yml)
 - [x] Coverage must be ≥ 80% or build fails (coverage report --fail-under=80)
@@ -410,12 +425,14 @@ Task T046: Test step              # Different workflow job
 - [x] Code review approval required (documented in branch-protection-setup.md)
 
 ### User Story 4 (Commit Messages)
+
 - [x] Commitizen interactive commit works (configured in pyproject.toml, `just commit` command)
 - [x] Improperly formatted messages are rejected (commitizen hook in pre-commit)
 - [x] Properly formatted messages are accepted (schema pattern configured)
 - [x] Conventional Commits format enforced (pre-commit hook + documentation)
 
 ### Overall System
+
 - [x] All workflows use caching effectively (cache@v4 with proper keys in all workflows)
 - [x] README has all CI badges (7 badges: CI feature, CI PR, CodeQL, Coverage, Pre-commit, Ruff, Mypy)
 - [x] Documentation is complete and accurate (6 comprehensive guides created)
@@ -457,4 +474,3 @@ Task T046: Test step              # Different workflow job
 ---
 
 **Ready to implement!** Start with Phase 1 and work through systematically. Each checkpoint provides a working, testable increment. 🚀
-

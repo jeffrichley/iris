@@ -1,6 +1,6 @@
 # Implementation Plan: CI & Pre-commit Strategy
 
-**Branch**: `001-ci-precommit-setup` | **Date**: October 20, 2025 | **Spec**: [spec.md](./spec.md)  
+**Branch**: `001-ci-precommit-setup` | **Date**: October 20, 2025 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `/specs/001-ci-precommit-setup/spec.md`
 
 **Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
@@ -11,58 +11,66 @@ Establish a comprehensive CI/CD pipeline and pre-commit hook system that enforce
 
 ## Technical Context
 
-**Language/Version**: Python 3.12, 3.13 + TypeScript (strict mode) + Node.js 20.x LTS  
-**Primary Dependencies**: GitHub Actions, ruff, mypy, bandit, safety, eslint, prettier, pre-commit framework, commitizen, just (task runner)  
-**Storage**: N/A (configuration files only - no data storage)  
-**Testing**: This feature establishes the testing infrastructure itself (pytest for backend, standard test frameworks for frontend)  
-**Target Platform**: GitHub Actions runners (ubuntu-latest, windows-latest, macos-latest)  
-**Project Type**: Infrastructure/Configuration (CI/CD and quality tooling setup)  
-**Performance Goals**: Feature branch CI feedback < 5 minutes, PR-to-main CI < 15 minutes, pre-commit hooks < 10 seconds  
-**Constraints**: Zero tolerance for linting/type errors before merge, 80% minimum test coverage, cross-platform validation required  
+**Language/Version**: Python 3.12, 3.13 + TypeScript (strict mode) + Node.js 20.x LTS
+**Primary Dependencies**: GitHub Actions, ruff, mypy, bandit, safety, eslint, prettier, pre-commit framework, commitizen, just (task runner)
+**Storage**: N/A (configuration files only - no data storage)
+**Testing**: This feature establishes the testing infrastructure itself (pytest for backend, standard test frameworks for frontend)
+**Target Platform**: GitHub Actions runners (ubuntu-latest, windows-latest, macos-latest)
+**Project Type**: Infrastructure/Configuration (CI/CD and quality tooling setup)
+**Performance Goals**: Feature branch CI feedback < 5 minutes, PR-to-main CI < 15 minutes, pre-commit hooks < 10 seconds
+**Constraints**: Zero tolerance for linting/type errors before merge, 80% minimum test coverage, cross-platform validation required
 **Scale/Scope**: Matrix builds (3 OS × 2 Python versions × 1 Node version = 6 backend combinations), multiple quality tools coordinated, ~10-15 configuration files
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### Alignment with Constitution Principles
 
 ✅ **Principle 1: Type Safety First**
+
 - **Alignment**: This feature ENFORCES type safety through mypy (Python) and tsc strict mode (TypeScript)
 - **Implementation**: FR-014, FR-017, FR-018, FR-025 mandate zero type checking errors
 - **Status**: FULLY COMPLIANT - This feature implements the principle
 
 ✅ **Principle 2: Explicit Over Implicit**
+
 - **Alignment**: CI workflows are explicit, documented, and visible
 - **Implementation**: Three distinct workflows (A, B, C) with clear purposes, FR-044 requires clear error messages
 - **Status**: FULLY COMPLIANT
 
 ✅ **Principle 6: Test Pyramid**
+
 - **Alignment**: This feature ENFORCES test pyramid through coverage requirements
 - **Implementation**: FR-019, FR-026 mandate 80% minimum coverage
 - **Status**: FULLY COMPLIANT - This feature implements the principle
 
 ✅ **Principle 7: Test Quality**
+
 - **Alignment**: Enforces test quality standards from constitution
 - **Implementation**: Uses `just test` (FR-043), no warnings disabled (constitution requirement)
 - **Status**: FULLY COMPLIANT
 
 ✅ **Principle 17: Version Control**
+
 - **Alignment**: Enforces Conventional Commits as required by constitution
 - **Implementation**: FR-038, FR-039, FR-040, FR-041 mandate Conventional Commits format
 - **Status**: FULLY COMPLIANT - This feature implements the principle
 
 ✅ **Principle 18: Code Review**
+
 - **Alignment**: Enforces PR requirements, CI must pass, coverage must not decrease
 - **Implementation**: FR-009-FR-012 establish branch protection matching constitution requirements
 - **Status**: FULLY COMPLIANT - This feature implements the principle
 
 ✅ **Principle 19: Tooling Compliance**
+
 - **Alignment**: Uses `just` commands as required, uses `uv` for Python (already in project)
 - **Implementation**: FR-043 mandates `just lint`, `just test`, `just type-check`, `just format`
 - **Status**: FULLY COMPLIANT
 
 ✅ **Performance Requirements (Principle 13)**
+
 - **Alignment**: Fast feedback aligns with performance-first mindset
 - **Implementation**: SC-001 (5min feedback), optimized with caching (FR-008)
 - **Status**: COMPLIANT
@@ -77,26 +85,30 @@ Establish a comprehensive CI/CD pipeline and pre-commit hook system that enforce
 
 ## Post-Design Constitution Re-check
 
-*Re-evaluated after Phase 1 design completion*
+_Re-evaluated after Phase 1 design completion_
 
 ✅ **Type Safety First (Principle 1)**
+
 - **Implementation**: Configured mypy with strict mode, TypeScript strict mode enabled
 - **Files**: `pyproject.toml` (mypy config), `tsconfig.json` (TypeScript config)
 - **Verification**: FR-017, FR-018, FR-025 ensure zero type errors before merge
 - **Status**: COMPLIANT - Strict enforcement configured
 
 ✅ **Explicit Over Implicit (Principle 2)**
+
 - **Implementation**: All workflows explicitly documented, clear error messages required (FR-044)
 - **Files**: `.github/workflows/*.yml` with detailed comments
 - **Status**: COMPLIANT - All automation is transparent and documented
 
 ✅ **Error Handling (Principle 4)**
+
 - **Implementation**: Will use rich library for logging (constitution requirement already exists)
 - **Note**: CI error messages must be clear and actionable (FR-044)
 - **Status**: COMPLIANT - Aligned with existing error handling standards
 
 ✅ **Test Pyramid & Quality (Principles 6-7)**
-- **Implementation**: 
+
+- **Implementation**:
   - Coverage minimum 80% enforced (FR-019, FR-026)
   - Uses `just test` command (constitution requirement)
   - Explicit test markers required (constitution requirement preserved)
@@ -105,12 +117,14 @@ Establish a comprehensive CI/CD pipeline and pre-commit hook system that enforce
 - **Status**: COMPLIANT - Enforces constitution's test standards
 
 ✅ **Test Execution (Principle 8)**
+
 - **Implementation**: `just test` command standardized (FR-043)
 - **Files**: `justfile` with test commands
 - **Status**: COMPLIANT - Matches constitution requirement exactly
 
 ✅ **Version Control (Principle 17)**
-- **Implementation**: 
+
+- **Implementation**:
   - Conventional Commits enforced via commitizen (FR-038-042)
   - Feature branches required (workflow design)
   - PR required for main (FR-009)
@@ -119,6 +133,7 @@ Establish a comprehensive CI/CD pipeline and pre-commit hook system that enforce
 - **Status**: COMPLIANT - Full implementation of constitution requirements
 
 ✅ **Code Review (Principle 18)**
+
 - **Implementation**:
   - All PRs require review (FR-011)
   - CI must pass (FR-010)
@@ -127,6 +142,7 @@ Establish a comprehensive CI/CD pipeline and pre-commit hook system that enforce
 - **Status**: COMPLIANT - All review requirements enforced
 
 ✅ **Tooling Compliance (Principle 19)**
+
 - **Implementation**:
   - Uses `just` for all commands (FR-043)
   - Uses `uv` for Python (already in project, workflows will use it)
@@ -135,6 +151,7 @@ Establish a comprehensive CI/CD pipeline and pre-commit hook system that enforce
 - **Status**: COMPLIANT - Matches tooling requirements
 
 ✅ **Performance Requirements (Principle 13)**
+
 - **Implementation**:
   - Feature branch CI < 5 minutes (SC-001)
   - PR validation < 15 minutes (SC-009)
@@ -142,6 +159,7 @@ Establish a comprehensive CI/CD pipeline and pre-commit hook system that enforce
 - **Status**: COMPLIANT - Meets performance standards
 
 ✅ **Release Standards (Principle 20)**
+
 - **Implementation**:
   - Pre-release checklist enforced via CI (all tests, coverage, security)
   - Workflow C for optional release automation
@@ -203,7 +221,6 @@ docs/
 
 ## Complexity Tracking
 
-*Fill ONLY if Constitution Check has violations that must be justified*
+_Fill ONLY if Constitution Check has violations that must be justified_
 
 **N/A** - No constitutional violations. This feature implements and enforces constitution principles.
-

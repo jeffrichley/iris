@@ -9,6 +9,7 @@ The CI/CD implementation is complete, but **branch protection rules** must be co
 ### Why Manual Setup?
 
 Branch protection rules are **GitHub repository settings** that require:
+
 - Repository admin permissions
 - Access to GitHub web UI or API
 - Cannot be committed as files in the repository
@@ -20,6 +21,7 @@ Follow the complete guide: **[branch-protection-setup.md](./branch-protection-se
 ### Quick Setup (5 minutes)
 
 1. **Navigate to Branch Protection Settings**:
+
    ```
    https://github.com/jeffrichley/iris/settings/branches
    ```
@@ -73,6 +75,7 @@ Follow the complete guide: **[branch-protection-setup.md](./branch-protection-se
 **Timing**: You must push this branch and create a PR FIRST before status checks appear in GitHub's dropdown. GitHub learns about available checks from actual workflow runs.
 
 **Recommended Flow**:
+
 1. ✅ Push this feature branch → Workflow A runs
 2. ✅ Create PR to main → Workflow B + CodeQL run
 3. ✅ Wait for all workflows to complete
@@ -105,12 +108,14 @@ gh pr create --base main
 ## What Happens Without Branch Protection?
 
 ❌ **Without branch protection**:
+
 - Developers can push directly to `main` (bypassing CI)
 - Code can be merged without review
 - Broken code can reach production
 - Quality gates are recommendations, not enforcement
 
 ✅ **With branch protection**:
+
 - All changes MUST go through PR process
 - CI MUST pass before merge
 - Code review MUST be approved
@@ -140,6 +145,7 @@ See **[branch-protection-setup.md](./branch-protection-setup.md)** for complete 
 ## Summary
 
 **What's Automated**: ✅
+
 - Pre-commit hooks
 - GitHub Actions workflows
 - Security scanning
@@ -147,6 +153,7 @@ See **[branch-protection-setup.md](./branch-protection-setup.md)** for complete 
 - Documentation
 
 **What's Manual**: ⚠️
+
 - Branch protection rules (5 minutes, one-time setup)
 - Initial secrets baseline scan (if you have existing code with secrets)
 
@@ -157,4 +164,3 @@ See **[branch-protection-setup.md](./branch-protection-setup.md)** for complete 
 ---
 
 **See**: [branch-protection-setup.md](./branch-protection-setup.md) for complete instructions
-
