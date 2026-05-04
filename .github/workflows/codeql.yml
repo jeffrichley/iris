@@ -2,7 +2,7 @@ name: CodeQL Security Analysis
 
 # CodeQL: Comprehensive security and code quality analysis
 # Runs on: Pull requests to main and scheduled weekly scans
-# Languages: Python, TypeScript/JavaScript
+# Languages: Python (JavaScript/TypeScript removed — no JS/TS sources in repo)
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['python', 'javascript']
+        language: ['python']
     
     steps:
       - name: Checkout code
